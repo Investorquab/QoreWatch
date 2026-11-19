@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { chainConfig, Handles, Http, Rest, Rpc, Tokens, type Evm, type FetchLike } from "@qorewatch/core";
+import { chainConfig, Handles, Http, Rest, Rpc, Tokens, type Evm, type FetchLike, type TokenLog } from "@qorewatch/core";
 import type { Chain } from "../src/chain.js";
 
 export const ME = "qor1x46se3fzj60jjl6zreq3ur95fy6h9vdgrw5yq7";
@@ -43,7 +43,15 @@ export function fakeChain(state: FakeState = defaultState()): { chain: Chain; st
         const t = state.txs.find((x) => x.hash === h);
         return t ? json(200, { result: t }) : json(200, { error: { code: -32603, message: "Internal error", data: `tx (${h}) not found` } });
       }
-      if (p === "/block") return json(200, { result: { block: { header: { time: "2026-11-19T18:00:00Z", height: u.searchParams.get("height") }, data: { txs: [] } } } });
+      if (p === "/block") {
+        const h = Number(u.searchParams.get("height"));
+        if (h > state.height) return json(200, { error: { code: -32603, message: "Internal error", data: `height ${h} must be less than or equal to the current blockchain height ${state.height}` } });
+        return json(200, { result: { block: { header: { time: "2026-11-19T18:00:00Z", height: String(h) }, data: { txs: (state.blocks[h] ?? []).map((t) => t.tx) } } } });
+      }
+      if (p === "/block_results") {
+        const h = Number(u.searchParams.get("height"));
+        return json(200, { result: { txs_results: (state.blocks[h] ?? []).map((t) => t.tx_result) } });
+      }
       if (p === "/tx_search") {
         const q = u.searchParams.get("query") ?? "";
         const hits = state.txs.filter((t) => JSON.stringify(t.tx_result).includes(q.match(/'([^']+)'/)?.[1] ?? "@@"));
@@ -65,6 +73,7 @@ export function fakeChain(state: FakeState = defaultState()): { chain: Chain; st
     isContract: async (a: string) => state.contracts.includes(a.toLowerCase()),
     allowance: async () => state.allowance,
     riskScore: async () => undefined,
+    tokenLogs: async (from: number, to: number) => state.logs.filter((l) => l.block >= from && l.block <= to),
   } as unknown as Evm;
   const chain: Chain = { cfg: chainConfig("testnet", { rpc: "https://rpc", rest: "https://rest" }), rpc: new Rpc("https://rpc", http), rest: new Rest("https://rest", http), evm, tokens, handles: new Handles(http, "https://registry") };
   return { chain, state, requests };
@@ -83,6 +92,8 @@ export interface FakeState {
   txs: { hash: string; height: string; index: number; tx: string; time: string; tx_result: unknown }[];
   contracts: string[];
   allowance: bigint;
+  blocks: Record<number, { tx: string; tx_result: unknown }[]>;
+  logs: TokenLog[];
 }
 
 export function defaultState(): FakeState {
@@ -98,5 +109,7 @@ export function defaultState(): FakeState {
     txs: [...txFixture("own_demo_inbox"), ...txFixture("authz_grant"), ...txFixture("bank_send")],
     contracts: ["0xd837298637f4459a3981b540d5543a4423add801"],
     allowance: 0n,
+    blocks: {},
+    logs: [],
   };
 }
