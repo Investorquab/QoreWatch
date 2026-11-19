@@ -35,3 +35,4 @@ playwright-report/
 .taste-skill/
 .vercel/
 .DS_Store
+contracts/lib/
