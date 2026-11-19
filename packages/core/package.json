@@ -1,0 +1,38 @@
+{
+  "name": "@qorewatch/core",
+  "version": "0.1.0",
+  "description": "Read QoreChain: decode blocks and transactions, turn chain events into typed records, explain them in plain words, and check an account's post-quantum health.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src test",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@cosmjs/proto-signing": "^0.39.0",
+    "@noble/curves": "2.4.0",
+    "@noble/hashes": "2.4.0",
+    "@qorechain/evm": "0.14.0",
+    "@qorechain/sdk": "0.14.0",
+    "@scure/base": "^2.4.0",
+    "cosmjs-types": "^0.10.1",
+    "viem": "^2.58.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^22.20.5",
+    "eslint": "^9.39.5",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.73.0",
+    "vitest": "^3.2.7"
+  }
+}
