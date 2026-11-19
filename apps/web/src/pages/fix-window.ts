@@ -25,8 +25,8 @@ async function start() {
     </dl></div>
     <div class="card"><ol class="steps">
       <li class="active"><h3>Open QoreX</h3><p>Click the QoreX icon in your browser and unlock it. Make sure the account above is the active one.</p></li>
-      <li><h3>Tap your EVM window</h3><p>On the home screen, tap the line that says <b>“Tap to check or open your EVM window”</b>.</p></li>
-      <li><h3>Close the window</h3><p>Tap <b>Close the window</b> and approve. QoreX signs it with your ML-DSA-87 key.</p></li>
+      <li><h3>Tap the window row</h3><p>On the home screen, tap the <b>“MetaMask on QoreChain”</b> row. While a window is open it reads <b>“Window open · ${w.remainingTxs ?? "?"} transactions · … QOR left”</b>.</p></li>
+      <li><h3>Close the window</h3><p>On the <b>EVM access window</b> screen, tap <b>Close the window</b>. QoreX signs it with your ML-DSA-87 key and sends it at once; it shows <b>“Window closed”</b>.</p></li>
     </ol><div class="notice" id="watch"><span class="row"><span class="spinner"></span> Watching the chain: this page updates the moment the window closes.</span></div></div>`;
   const closed = await until(async () => !(await api<Win>(`/window/${encodeURIComponent(address)}`)).live, 4000, 20 * 60_000);
   if (closed) {
