@@ -105,7 +105,15 @@ describe("security detector", () => {
     await check("pqc_delegation_authorize", (r) => r.signer!, /Another address can now act/, "warning");
     await check("pqc_delegation_clear", (r) => r.signer!, /EVM delegation withdrawn/);
     await check("pqc_window_close", (r) => r.signer!, /Spending window closed/);
-    await check("ev_classical_only", (r) => r.signer!, /classical-only signature/, "warning");
+    // A key registration is classical-only by necessity: no warning for that bootstrap…
+    const [reg] = await txs("ev_classical_only");
+    const regAlerts = await securityDetector.detect(reg!, ctx(reg!.signer!));
+    expect(regAlerts.some((x) => /classical-only/.test(plain(x.title)))).toBe(false);
+    expect(regAlerts.some((x) => /Post-quantum key registered/.test(plain(x.title)))).toBe(true);
+    // …but any other classical-only transaction is a warning.
+    const bare = { ...reg!, events: reg!.events.filter((e) => e.kind !== "pq_key_registered") };
+    const warn = await securityDetector.detect(bare, ctx(reg!.signer!));
+    expect(warn.find((x) => /classical-only signature/.test(plain(x.title)))?.level).toBe("warning");
     await check("pqc_register", (r) => r.signer!, /Post-quantum key registered/);
     await check("pqc_kem_register", (r) => r.signer!, /Encryption key/);
     await check("ev_window_used", (r) => r.signer!, /Spent from the open window/);

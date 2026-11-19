@@ -1,0 +1,10 @@
+{
+  "network": "qorechain-diana",
+  "evmChainId": 9800,
+  "contract": "QoreWatchAttest",
+  "address": "0x52f29cb4f18ec44acbb997b94c0776e4e35ed273",
+  "deployBlock": 10389715,
+  "deployTx": "0x14a8b49efa151586fd80ee234ceb3e981673c97679a3b6e3b7c97dd2b6967400",
+  "deployer": "0xe5B210Eec8FcA2D8eB98ccA2384D6B790C5fB2FC",
+  "windowTx": "FE119A8198DF0203A457FAA87E42570C982A9283070F07A96759603C8B6CC710"
+}

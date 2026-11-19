@@ -20,9 +20,9 @@ contract QoreWatchAttestTest is Test {
     function test_attest_records_latest_and_emits() public {
         bytes32 h = keccak256("report");
         vm.expectEmit(true, false, false, true, address(c));
-        emit Attested(alice, 92, h, bytes8("ABCD2345"), 1_795_000_000);
+        emit Attested(alice, 92, h, bytes8(0x4142434432333435), 1_795_000_000);
         vm.prank(alice);
-        c.attest(92, h, bytes8("ABCD2345"));
+        c.attest(92, h, bytes8(0x4142434432333435));
         (uint64 time, uint64 blockNumber, uint16 score, bytes32 reportHash) = c.latest(alice);
         assertEq(time, 1_795_000_000);
         assertEq(blockNumber, 10_400_000);

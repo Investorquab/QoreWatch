@@ -121,6 +121,8 @@ export const securityDetector: TxDetector = {
           if (ev.account === a) await add(ev, "aarules", "info", "🧩 <b>Smart-account spending rules changed</b>");
           break;
         case "classical_only":
+          // Registering the account's first post-quantum key is necessarily classical-only: that is the bootstrap, not an attack.
+          if (tx.events.some((e) => e.kind === "pq_key_registered" && e.address === ev.address)) break;
           if (ev.address === a) await add(ev, "classical", "warning", `⚠️ <b>A classical-only signature was used on ${subject(ctx)}</b>`, ["QoreChain normally requires the post-quantum signature as well. This is how a quantum attacker would sign."]);
           break;
         case "anomaly":
