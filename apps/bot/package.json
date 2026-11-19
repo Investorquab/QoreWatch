@@ -1,0 +1,30 @@
+{
+  "name": "@qorewatch/bot",
+  "version": "0.1.0",
+  "description": "QoreWatch: a Telegram bot that watches QoreChain addresses and alerts on money moves and post-quantum security events.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src test",
+    "test": "vitest run",
+    "dev": "tsx --env-file=.env src/main.ts",
+    "start": "node --env-file=.env dist/main.js"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.19",
+    "@qorewatch/core": "workspace:*",
+    "@resvg/resvg-js": "^2.6.2",
+    "grammy": "^1.46.0",
+    "hono": "^4.13.19"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  }
+}
