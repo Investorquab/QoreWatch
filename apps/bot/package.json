@@ -22,6 +22,8 @@
     "viem": "^2.58.1"
   },
   "devDependencies": {
+    "@cosmjs/stargate": "^0.39.0",
+    "@qorechain/sdk": "0.14.0",
     "@types/node": "^22.20.5",
     "cosmjs-types": "^0.10.1",
     "tsup": "^8.5.1",

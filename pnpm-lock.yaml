@@ -45,6 +45,12 @@ importers:
         specifier: ^2.58.1
         version: 2.58.1(typescript@5.9.3)
     devDependencies:
+      '@cosmjs/stargate':
+        specifier: ^0.39.0
+        version: 0.39.0
+      '@qorechain/sdk':
+        specifier: 0.14.0
+        version: 0.14.0(viem@2.58.1(typescript@5.9.3))
       '@types/node':
         specifier: ^22.20.5
         version: 22.20.5
