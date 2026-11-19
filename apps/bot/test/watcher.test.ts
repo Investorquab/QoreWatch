@@ -196,3 +196,14 @@ describe("Jobs", () => {
     expect(m.sent[0]!.html).toMatch(/upgrades to v3\.2\.9[\s\S]*block 10,424,000/);
   });
 });
+
+describe("pool prices", () => {
+  it("marks dust-liquidity pools as thin instead of quoting an absurd price", async () => {
+    const { poolPrices } = await import("../src/features/pools.js");
+    const { Tokens } = await import("@qorewatch/core");
+    const t = new Tokens();
+    t.set({ id: "erc20:0x02292293c13880a26242690eb70a0e42b8e91c28", address: "0x02292293c13880a26242690eb70a0e42b8e91c28", symbol: "fETH", decimals: 18 });
+    const [p] = await poolPrices([{ id: "1", tokenA: "erc20:0x02292293c13880a26242690eb70a0e42B8E91c28", tokenB: "uqor", reserveA: 969699n, reserveB: 1031359n, status: "active", poolType: "constant_product" }], t);
+    expect(p).toMatchObject({ thin: true, priceText: "too little liquidity for a price" });
+  });
+});

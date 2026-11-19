@@ -22,7 +22,7 @@ export interface BotHooks {
   /** Build a share-card PNG for a check report. */
   card?: (address: string) => Promise<Uint8Array>;
   /** Pools and prices, for /pools and /pricealert. */
-  pools?: () => Promise<{ id: string; name: string; price: number; priceText: string }[]>;
+  pools?: () => Promise<{ id: string; name: string; price: number; priceText: string; thin?: boolean }[]>;
   /** Proposals, for /proposals. */
   proposals?: () => Promise<View>;
   /** Digest for a chat, now. */
@@ -418,6 +418,7 @@ export function createBot(deps: BotDeps): { bot: Bot; messenger: Messenger } {
     const list = hooks.pools ? await busy(ctx, () => hooks.pools!()) : undefined;
     const p = list?.find((x) => x.id === poolId);
     if (!p) return void (await ctx.reply("I don't know that pool. See /pools."));
+    if (p.thin) return void (await ctx.reply("That pool has too little liquidity for a meaningful price, so I can't alert on it."));
     store.setPoolWatch(ctx.chat.id, poolId, pct, p.price);
     await ctx.reply(`🔔 I'll alert you when pool #${esc(poolId)} (${esc(p.name)}) moves ${pct}% from ${esc(p.priceText)}.`, { parse_mode: "HTML" });
   });

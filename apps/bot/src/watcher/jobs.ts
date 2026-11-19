@@ -136,7 +136,7 @@ export class Jobs {
     const prices = new Map((await poolPrices(await this.d.chain.rest.pools(), this.d.chain.tokens)).map((p) => [p.id, p]));
     for (const w of watches) {
       const p = prices.get(w.poolId);
-      if (!p || !w.basePrice) continue;
+      if (!p || !w.basePrice || p.thin) continue;
       const pct = change(w.basePrice, p.price);
       if (Math.abs(pct) < w.pct) continue;
       const chat = this.d.store.chat(w.chatId);

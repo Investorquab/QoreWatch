@@ -41,7 +41,8 @@ async function main(): Promise<void> {
   const store = new Store(join(config.dataDir, "qorewatch.sqlite"));
   const chain = createChain(config);
   const pacer = new Pacer();
-  let watcher: Watcher | undefined;
+  // The watcher is created after the bot (it sends through the bot), but the bot's /status reads it.
+  const ref: { watcher?: Watcher } = {};
   const lk = { chain, store, publicUrl: config.publicUrl };
 
   const { bot, messenger } = createBot({
@@ -51,8 +52,11 @@ async function main(): Promise<void> {
     log,
     pacer,
     hooks: {
-      status: () => ({ ...(watcher?.status ?? { startedAt: new Date().toISOString() }) }),
-      card: async (address) => renderCard(await runCheck(lk, address), { ...((await chain.handles.reverse(address)) ? { handle: (await chain.handles.reverse(address))! } : {}), botUsername: config.botUsername }),
+      status: () => ({ ...(ref.watcher?.status ?? { startedAt: new Date().toISOString() }) }),
+      card: async (address) => {
+        const [report, handle] = await Promise.all([runCheck(lk, address), chain.handles.reverse(address)]);
+        return renderCard(report, { ...(handle ? { handle } : {}), botUsername: config.botUsername });
+      },
       pools: async () => poolPrices(await chain.rest.pools(), chain.tokens),
       proposals: async () => proposalsView(await chain.rest.proposals(undefined, 10)),
       digest: (chatId) => buildDigest(chatId, store, chain, false),
@@ -60,12 +64,13 @@ async function main(): Promise<void> {
   });
 
   const deliverer = new Deliverer(store, messenger, log);
-  watcher = new Watcher({ chain, store, deliverer, messenger, log, publicUrl: config.publicUrl, maxCatchupBlocks: config.maxCatchupBlocks });
-  const jobs = new Jobs({ store, chain, deliverer, messenger, log, publicUrl: config.publicUrl, height: () => watcher?.status.height });
+  const watcher = new Watcher({ chain, store, deliverer, messenger, log, publicUrl: config.publicUrl, maxCatchupBlocks: config.maxCatchupBlocks });
+  ref.watcher = watcher;
+  const jobs = new Jobs({ store, chain, deliverer, messenger, log, publicUrl: config.publicUrl, height: () => watcher.status.height });
   const attest = config.attestContract ? attestHook({ store, chain, messenger, log, contract: config.attestContract, publicUrl: config.publicUrl }) : undefined;
 
   const web = webDir();
-  const app = createServer({ config, store, chain, log, ...(web ? { webDir: web } : {}), status: () => watcher!.status });
+  const app = createServer({ config, store, chain, log, ...(web ? { webDir: web } : {}), status: () => watcher.status });
   const server = serve({ fetch: app.fetch, hostname: config.httpHost, port: config.httpPort });
   log.info("http server listening", { host: config.httpHost, port: config.httpPort, pages: web ? "yes" : "no (build apps/web)" });
 
@@ -80,7 +85,7 @@ async function main(): Promise<void> {
   const loops: Promise<unknown>[] = [];
   loops.push(watcher.run(config.pollMs));
   const jobTimer = setInterval(() => void jobs.runDue(), 20_000);
-  const attestTimer = attest ? setInterval(() => void attest.scan(watcher!.status.height), 15_000) : undefined;
+  const attestTimer = attest ? setInterval(() => void attest.scan(watcher.status.height), 15_000) : undefined;
   loops.push(bot.start({ drop_pending_updates: false, allowed_updates: ["message", "callback_query", "my_chat_member"], onStart: () => log.info("polling Telegram for updates") }));
 
   for (const admin of config.adminChatIds) await messenger.send(admin, `🟢 QoreWatch started on ${config.network}.`).catch(() => undefined);
@@ -89,7 +94,7 @@ async function main(): Promise<void> {
     log.info("shutting down", { signal });
     clearInterval(jobTimer);
     if (attestTimer) clearInterval(attestTimer);
-    watcher?.stop();
+    watcher.stop();
     await bot.stop().catch(() => undefined);
     server.close();
     store.close();
