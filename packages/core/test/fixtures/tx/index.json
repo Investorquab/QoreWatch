@@ -1,0 +1,157 @@
+{
+ "bank_send": {
+  "typeUrl": "/cosmos.bank.v1beta1.MsgSend",
+  "total": 6778,
+  "saved": 2
+ },
+ "evm_tx": {
+  "typeUrl": "/cosmos.evm.vm.v1.MsgEthereumTx",
+  "total": 5846,
+  "saved": 2
+ },
+ "pqc_register": {
+  "typeUrl": "/qorechain.pqc.v1.MsgRegisterPQCKey",
+  "total": 49,
+  "saved": 2
+ },
+ "pqc_rotate": {
+  "typeUrl": "/qorechain.pqc.v1.MsgRotatePQCKey",
+  "total": 40,
+  "saved": 2
+ },
+ "pqc_window_open": {
+  "typeUrl": "/qorechain.pqc.v1.MsgOpenEVMWindow",
+  "total": 1586,
+  "saved": 2
+ },
+ "pqc_window_close": {
+  "typeUrl": "/qorechain.pqc.v1.MsgCloseEVMWindow",
+  "total": 461,
+  "saved": 2
+ },
+ "pqc_delegation_authorize": {
+  "typeUrl": "/qorechain.pqc.v1.MsgAuthorizeEVMDelegation",
+  "total": 100,
+  "saved": 2
+ },
+ "pqc_delegation_clear": {
+  "typeUrl": "/qorechain.pqc.v1.MsgClearEVMDelegation",
+  "total": 19,
+  "saved": 2
+ },
+ "pqc_kem_register": {
+  "typeUrl": "/qorechain.pqc.v1.MsgRegisterKEMKey",
+  "total": 280,
+  "saved": 2
+ },
+ "authz_grant": {
+  "typeUrl": "/cosmos.authz.v1beta1.MsgGrant",
+  "total": 69,
+  "saved": 2
+ },
+ "authz_revoke": {
+  "typeUrl": "/cosmos.authz.v1beta1.MsgRevoke",
+  "total": 29,
+  "saved": 2
+ },
+ "authz_exec": {
+  "typeUrl": "/cosmos.authz.v1beta1.MsgExec",
+  "total": 63,
+  "saved": 2
+ },
+ "feegrant_grant": {
+  "typeUrl": "/cosmos.feegrant.v1beta1.MsgGrantAllowance",
+  "total": 20,
+  "saved": 2
+ },
+ "feegrant_revoke": {
+  "typeUrl": "/cosmos.feegrant.v1beta1.MsgRevokeAllowance",
+  "total": 12,
+  "saved": 2
+ },
+ "aa_create": {
+  "typeUrl": "/qorechain.abstractaccount.v1.MsgCreateAbstractAccount",
+  "total": 25,
+  "saved": 2
+ },
+ "aa_register_auth": {
+  "typeUrl": "/qorechain.abstractaccount.v1.MsgRegisterAuthenticator",
+  "total": 146,
+  "saved": 2
+ },
+ "aa_revoke_auth": {
+  "typeUrl": "/qorechain.abstractaccount.v1.MsgRevokeAuthenticator",
+  "total": 46,
+  "saved": 2
+ },
+ "aa_spending_rules": {
+  "typeUrl": "/qorechain.abstractaccount.v1.MsgUpdateSpendingRules",
+  "total": 143,
+  "saved": 2
+ },
+ "amm_swap_in": {
+  "typeUrl": "/qorechain.amm.v1.MsgSwapExactIn",
+  "total": 230,
+  "saved": 2
+ },
+ "amm_add_liquidity": {
+  "typeUrl": "/qorechain.amm.v1.MsgAddLiquidity",
+  "total": 30,
+  "saved": 2
+ },
+ "staking_delegate": {
+  "typeUrl": "/cosmos.staking.v1beta1.MsgDelegate",
+  "total": 278,
+  "saved": 2
+ },
+ "staking_undelegate": {
+  "typeUrl": "/cosmos.staking.v1beta1.MsgUndelegate",
+  "total": 25,
+  "saved": 2
+ },
+ "staking_redelegate": {
+  "typeUrl": "/cosmos.staking.v1beta1.MsgBeginRedelegate",
+  "total": 8,
+  "saved": 2
+ },
+ "distr_withdraw": {
+  "typeUrl": "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward",
+  "total": 86,
+  "saved": 2
+ },
+ "gov_submit": {
+  "typeUrl": "/cosmos.gov.v1.MsgSubmitProposal",
+  "total": 36,
+  "saved": 2
+ },
+ "gov_vote": {
+  "typeUrl": "/cosmos.gov.v1.MsgVote",
+  "total": 100,
+  "saved": 2
+ },
+ "wasm_execute": {
+  "typeUrl": "/cosmwasm.wasm.v1.MsgExecuteContract",
+  "total": 25,
+  "saved": 2
+ },
+ "crossvm_call": {
+  "typeUrl": "/qorechain.crossvm.v1.MsgCrossVMCall",
+  "total": 155,
+  "saved": 2
+ },
+ "stakingtier_lock": {
+  "typeUrl": "/qorechain.stakingtier.v1.MsgLockDelegation",
+  "total": 40,
+  "saved": 2
+ },
+ "ev_classical_only": {
+  "query": "pqc_hybrid_classical_only.hybrid_mode='required'",
+  "total": 1184,
+  "saved": 2
+ },
+ "ev_window_used": {
+  "query": "pqc_evm_window_used.source='ante'",
+  "total": 4920,
+  "saved": 2
+ }
+}

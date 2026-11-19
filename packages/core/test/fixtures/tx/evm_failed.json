@@ -1,0 +1,683 @@
+[
+ {
+  "hash": "7A1FF38634C21371874D1C5EFF746DD5030697A6C479B075E0CA04C7AEC1D61A",
+  "height": "10380649",
+  "index": 0,
+  "tx_result": {
+   "code": 0,
+   "data": "ErQBCicvY29zbW9zLmV2bS52bS52MS5Nc2dFdGhlcmV1bVR4UmVzcG9uc2USiAEKQjB4MTVmZTc2MzFlNmY3OTk2NWFlYTM0M2U1MmNhNjEwZjIzZDBiYTVjODNlOGYzMjM0ZmVlZGM5OTk1NzliMDE1MyISZXhlY3V0aW9uIHJldmVydGVkKNCGAzCspQE6IPI6ZYQsqdywAghX0kzUiEL/XGAg6QAlKo3oPJpXIu19QOaz/NcG",
+   "log": "",
+   "info": "",
+   "gas_wanted": "100000",
+   "gas_used": "50000",
+   "events": [
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1qphpfm88wztjm48znu4g44zhlk767vqp5rndra",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "11250uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "11250uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1qphpfm88wztjm48znu4g44zhlk767vqp5rndra",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "11250uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1qphpfm88wztjm48znu4g44zhlk767vqp5rndra",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1qphpfm88wztjm48znu4g44zhlk767vqp5rndra",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "tx",
+     "attributes": [
+      {
+       "key": "fee",
+       "value": "11250000000000000uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ethereum_tx",
+     "attributes": [
+      {
+       "key": "ethereumTxHash",
+       "value": "0x15fe7631e6f79965aea343e52ca610f23d0ba5c83e8f3234feedc999579b0153",
+       "index": true
+      },
+      {
+       "key": "txIndex",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "pqc_evm_window_used",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1qphpfm88wztjm48znu4g44zhlk767vqp5rndra",
+       "index": true
+      },
+      {
+       "key": "evm_address",
+       "value": "0x006E14ECE770972dd4e29F2a8AD457FDbdaf3001",
+       "index": true
+      },
+      {
+       "key": "window_open_height",
+       "value": "10380639",
+       "index": true
+      },
+      {
+       "key": "used_txs",
+       "value": "1",
+       "index": true
+      },
+      {
+       "key": "used_value",
+       "value": "11250",
+       "index": true
+      },
+      {
+       "key": "tx_value",
+       "value": "11250",
+       "index": true
+      },
+      {
+       "key": "source",
+       "value": "ante",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ai_anomaly_check",
+     "attributes": [
+      {
+       "key": "score_millionths",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "action",
+       "value": "allow",
+       "index": true
+      },
+      {
+       "key": "is_anomalous",
+       "value": "false",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "action",
+       "value": "/cosmos.evm.vm.v1.MsgEthereumTx",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1qphpfm88wztjm48znu4g44zhlk767vqp5rndra",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "5625uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor1qphpfm88wztjm48znu4g44zhlk767vqp5rndra",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "5625uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor1qphpfm88wztjm48znu4g44zhlk767vqp5rndra",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "5625uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1qphpfm88wztjm48znu4g44zhlk767vqp5rndra",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ethereum_tx",
+     "attributes": [
+      {
+       "key": "amount",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "ethereumTxHash",
+       "value": "0x15fe7631e6f79965aea343e52ca610f23d0ba5c83e8f3234feedc999579b0153",
+       "index": true
+      },
+      {
+       "key": "txIndex",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "txGasUsed",
+       "value": "50000",
+       "index": true
+      },
+      {
+       "key": "txHash",
+       "value": "7a1ff38634c21371874d1c5eff746dd5030697a6c479b075e0ca04c7aec1d61a",
+       "index": true
+      },
+      {
+       "key": "recipient",
+       "value": "0x1DC53575848bd1A8e9D51e2f2F495E5668195043",
+       "index": true
+      },
+      {
+       "key": "ethereumTxFailed",
+       "value": "execution reverted",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "module",
+       "value": "evm",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "0x006e14ece770972dd4e29f2a8ad457fdbdaf3001",
+       "index": true
+      },
+      {
+       "key": "txType",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    }
+   ],
+   "codespace": ""
+  },
+  "tx": "Ct0BCqkBCh8vY29zbW9zLmV2bS52bS52MS5Nc2dFdGhlcmV1bVR4EoUBKhQAbhTs53CXLdTinyqK1Ff9va8wATJt+GsEhRoxhcUAgwGGoJQdxTV1hIvRqOnVHi8vSV5WaBlQQ4CEAAAAAIJMs6ADynKkKzv9TWbwBHqFKR7Qxocvi13CGCf350n2z/YclqA0SIcdwN2edK482LjOc09cYaEKeawRHPx+BzzE/Nt9HPo/LgosL2Nvc21vcy5ldm0udm0udjEuRXh0ZW5zaW9uT3B0aW9uc0V0aGVyZXVtVHgSIRIfChkKBGFxb3ISETExMjUwMDAwMDAwMDAwMDAwEKCNBg==",
+  "time": "2026-11-19T15:46:46.942955622Z"
+ },
+ {
+  "hash": "6A705F844F7FBE14C768635D7B6E1B70D4C86BB80C7EDEC25C55F9A0C79B41D6",
+  "height": "10379973",
+  "index": 0,
+  "tx_result": {
+   "code": 0,
+   "data": "Er0BCicvY29zbW9zLmV2bS52bS52MS5Nc2dFdGhlcmV1bVR4UmVzcG9uc2USkQEKQjB4YjcxYjVmZjU2ZTI3MzFlMjEzYjNiMmNlOTlhOTBkYjY3YjFiY2ViMTBjYmUzOGMyNTM2YjdmMDk0ZGJhMjdiOSIZc3RhY2sgdW5kZXJmbG93ICgwIDw9PiAzKSigy5gBMKDLmAE6INn9ksk+cnrCE15ObIqHlsgFcmHY2E8AMw8He1kuwDBoQKis/NcG",
+   "log": "",
+   "info": "",
+   "gas_wanted": "2500000",
+   "gas_used": "2500000",
+   "events": [
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1ltz00txsfpqycfqavfmckctxrws9m6kf0hwlwq",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "281250uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "281250uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1ltz00txsfpqycfqavfmckctxrws9m6kf0hwlwq",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "281250uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1ltz00txsfpqycfqavfmckctxrws9m6kf0hwlwq",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1ltz00txsfpqycfqavfmckctxrws9m6kf0hwlwq",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "tx",
+     "attributes": [
+      {
+       "key": "fee",
+       "value": "281250000000000000uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ethereum_tx",
+     "attributes": [
+      {
+       "key": "ethereumTxHash",
+       "value": "0xb71b5ff56e2731e213b3b2ce99a90db67b1bceb10cbe38c2536b7f094dba27b9",
+       "index": true
+      },
+      {
+       "key": "txIndex",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "pqc_evm_window_used",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1ltz00txsfpqycfqavfmckctxrws9m6kf0hwlwq",
+       "index": true
+      },
+      {
+       "key": "evm_address",
+       "value": "0xFAc4f7Acd048404C241d62778B61661Ba05DeAC9",
+       "index": true
+      },
+      {
+       "key": "window_open_height",
+       "value": "10379671",
+       "index": true
+      },
+      {
+       "key": "used_txs",
+       "value": "2",
+       "index": true
+      },
+      {
+       "key": "used_value",
+       "value": "562500",
+       "index": true
+      },
+      {
+       "key": "tx_value",
+       "value": "281250",
+       "index": true
+      },
+      {
+       "key": "source",
+       "value": "ante",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ai_anomaly_check",
+     "attributes": [
+      {
+       "key": "score_millionths",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "action",
+       "value": "allow",
+       "index": true
+      },
+      {
+       "key": "is_anomalous",
+       "value": "false",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "action",
+       "value": "/cosmos.evm.vm.v1.MsgEthereumTx",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1ltz00txsfpqycfqavfmckctxrws9m6kf0hwlwq",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ethereum_tx",
+     "attributes": [
+      {
+       "key": "amount",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "ethereumTxHash",
+       "value": "0xb71b5ff56e2731e213b3b2ce99a90db67b1bceb10cbe38c2536b7f094dba27b9",
+       "index": true
+      },
+      {
+       "key": "txIndex",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "txGasUsed",
+       "value": "2500000",
+       "index": true
+      },
+      {
+       "key": "txHash",
+       "value": "6a705f844f7fbe14c768635d7b6e1b70d4c86bb80c7edec25c55f9a0c79b41d6",
+       "index": true
+      },
+      {
+       "key": "ethereumTxFailed",
+       "value": "stack underflow (0 <=> 3)",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "module",
+       "value": "evm",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "0xfac4f7acd048404c241d62778b61661ba05deac9",
+       "index": true
+      },
+      {
+       "key": "txType",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    }
+   ],
+   "codespace": ""
+  },
+  "tx": "Cu0DCrkDCh8vY29zbW9zLmV2bS52bS52MS5Nc2dFdGhlcmV1bVR4EpUDKhT6xPes0EhATCQdYneLYWYboF3qyTL8AvkBeQWFGjGFxQCDJiWggIC5ASShJID/sAt8yKkfwvBjDlRXP0u/JH1xBFp4XILV+7cofuZExbAAAAAAAAAAAAAAAAB86s4Vk0eX3RuollI7ITt7/nib0wAAAAAAAAAAAAAAAItPCSeJTcuTOrhHpx8EjSEXHHO3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADeC2s6dkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAawBnqAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAu4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOEJ/4Z/ZZKqnW0Dnnqta9cfFllyDLxN2erhVU9uq0kAmLgkyzoA9vCKmjBCb3JMqRV01ujQcjjcVeoHEinOB8feD3CbNOoGuD5hBIAzG+Z9MsJVj6fXykYHzb898px08FopJbYdwl+j8uCiwvY29zbW9zLmV2bS52bS52MS5FeHRlbnNpb25PcHRpb25zRXRoZXJldW1UeBIjEiEKGgoEYXFvchISMjgxMjUwMDAwMDAwMDAwMDAwEKDLmAE=",
+  "time": "2026-11-19T15:30:48.081096345Z"
+ }
+]

@@ -1,0 +1,1218 @@
+[
+ {
+  "hash": "DEDCADEDAC21A99D1CE87D0B832AC4620078143FBC48FDB4F14C9B8A0AEC21F8",
+  "height": "10384503",
+  "index": 0,
+  "tx_result": {
+   "code": 0,
+   "data": "EiYKJC9jb3Ntb3MuYmFuay52MWJldGExLk1zZ1NlbmRSZXNwb25zZRIqCigvcW9yZWNoYWluLmFtbS52MS5Nc2dTd2FwRXhhY3RJblJlc3BvbnNl",
+   "log": "",
+   "info": "",
+   "gas_wanted": "376532",
+   "gas_used": "267088",
+   "events": [
+    {
+     "type": "pqc_verify",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "key_type",
+       "value": "hybrid",
+       "index": true
+      },
+      {
+       "key": "algorithm_id",
+       "value": "dilithium5",
+       "index": true
+      },
+      {
+       "key": "hybrid_mode",
+       "value": "required",
+       "index": true
+      },
+      {
+       "key": "status",
+       "value": "algorithm_active",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "pqc_hybrid_verify",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "algorithm_id",
+       "value": "dilithium5",
+       "index": true
+      },
+      {
+       "key": "status",
+       "value": "verified",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ai_anomaly_check",
+     "attributes": [
+      {
+       "key": "score_millionths",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "action",
+       "value": "allow",
+       "index": true
+      },
+      {
+       "key": "is_anomalous",
+       "value": "false",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "56480uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "56480uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "56480uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "tx",
+     "attributes": [
+      {
+       "key": "fee",
+       "value": "56480uqor",
+       "index": true
+      },
+      {
+       "key": "fee_payer",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "tx",
+     "attributes": [
+      {
+       "key": "acc_seq",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k/49",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "tx",
+     "attributes": [
+      {
+       "key": "signature",
+       "value": "D2LR0hDGzFwSo8H4N2EcryNylU3/Pp4Eg2nonTTm6t5CpDloft9h94rKBeJda7mpRWUPRQl/NJHceZPHUKa3Hg==",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "action",
+       "value": "/cosmos.bank.v1beta1.MsgSend",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "module",
+       "value": "bank",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "29000uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor1wl5jxt3n5fxez4csxe7t67xcfyvxr69y3mn4dq",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "29000uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor1wl5jxt3n5fxez4csxe7t67xcfyvxr69y3mn4dq",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "29000uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "action",
+       "value": "/qorechain.amm.v1.MsgSwapExactIn",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "module",
+       "value": "amm",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "28971000uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "28971000uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "28971000uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "1249856erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "1249856erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "1249856erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "28971uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "28971uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "28971uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "amm_swap",
+     "attributes": [
+      {
+       "key": "pool_id",
+       "value": "2",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "denom_in",
+       "value": "uqor",
+       "index": true
+      },
+      {
+       "key": "denom_out",
+       "value": "erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "amount_in",
+       "value": "28971000",
+       "index": true
+      },
+      {
+       "key": "amount_out",
+       "value": "1249856",
+       "index": true
+      },
+      {
+       "key": "fee_bps",
+       "value": "30",
+       "index": true
+      },
+      {
+       "key": "protocol_fee",
+       "value": "28971",
+       "index": true
+      },
+      {
+       "key": "protocol_fee_bps",
+       "value": "10",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    }
+   ],
+   "codespace": ""
+  },
+  "tx": "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",
+  "time": "2026-11-19T17:18:07.121511855Z"
+ },
+ {
+  "hash": "760F107D6C30377E7CC2729535BAAD6C1B4A9201B10C945812BA5450437A6611",
+  "height": "10384375",
+  "index": 0,
+  "tx_result": {
+   "code": 0,
+   "data": "EiYKJC9jb3Ntb3MuYmFuay52MWJldGExLk1zZ1NlbmRSZXNwb25zZRIqCigvcW9yZWNoYWluLmFtbS52MS5Nc2dTd2FwRXhhY3RJblJlc3BvbnNl",
+   "log": "",
+   "info": "",
+   "gas_wanted": "385779",
+   "gas_used": "274201",
+   "events": [
+    {
+     "type": "pqc_verify",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "key_type",
+       "value": "hybrid",
+       "index": true
+      },
+      {
+       "key": "algorithm_id",
+       "value": "dilithium5",
+       "index": true
+      },
+      {
+       "key": "hybrid_mode",
+       "value": "required",
+       "index": true
+      },
+      {
+       "key": "status",
+       "value": "algorithm_active",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "pqc_hybrid_verify",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "algorithm_id",
+       "value": "dilithium5",
+       "index": true
+      },
+      {
+       "key": "status",
+       "value": "verified",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ai_anomaly_check",
+     "attributes": [
+      {
+       "key": "score_millionths",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "action",
+       "value": "allow",
+       "index": true
+      },
+      {
+       "key": "is_anomalous",
+       "value": "false",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "57867uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "57867uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "57867uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "tx",
+     "attributes": [
+      {
+       "key": "fee",
+       "value": "57867uqor",
+       "index": true
+      },
+      {
+       "key": "fee_payer",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "tx",
+     "attributes": [
+      {
+       "key": "acc_seq",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k/48",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "tx",
+     "attributes": [
+      {
+       "key": "signature",
+       "value": "BLOTFP1ach3wrwQHn5B9V9LsCmwNSSJ/S7cp0rJnsT9rxbN9VDRcw26dN+POyo/Me/3C8/RJQUpEQWKLdYWYRA==",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "action",
+       "value": "/cosmos.bank.v1beta1.MsgSend",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "module",
+       "value": "bank",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "90erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor1wl5jxt3n5fxez4csxe7t67xcfyvxr69y3mn4dq",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "90erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor1wl5jxt3n5fxez4csxe7t67xcfyvxr69y3mn4dq",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "90erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "action",
+       "value": "/qorechain.amm.v1.MsgSwapExactIn",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "module",
+       "value": "amm",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "90084erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "90084erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "90084erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "2070278uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "2070278uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "2070278uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "90erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor1purnwdrhg477r0evks8t5ah7c8thvrssk08kcp",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "90erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor1purnwdrhg477r0evks8t5ah7c8thvrssk08kcp",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "90erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1xxs9c4mfqzya8yt38pphxl4zuut67fllcw740z",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "amm_swap",
+     "attributes": [
+      {
+       "key": "pool_id",
+       "value": "2",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1q8xqrzhty03vh3nwspt9g0m42s942mnd8wx48k",
+       "index": true
+      },
+      {
+       "key": "denom_in",
+       "value": "erc20:0x97143B771D34ddb9130b807b135Ae675A5a963CA",
+       "index": true
+      },
+      {
+       "key": "denom_out",
+       "value": "uqor",
+       "index": true
+      },
+      {
+       "key": "amount_in",
+       "value": "90084",
+       "index": true
+      },
+      {
+       "key": "amount_out",
+       "value": "2070278",
+       "index": true
+      },
+      {
+       "key": "fee_bps",
+       "value": "30",
+       "index": true
+      },
+      {
+       "key": "protocol_fee",
+       "value": "90",
+       "index": true
+      },
+      {
+       "key": "protocol_fee_bps",
+       "value": "10",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "1",
+       "index": true
+      }
+     ]
+    }
+   ],
+   "codespace": ""
+  },
+  "tx": "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",
+  "time": "2026-11-19T17:15:04.982259378Z"
+ }
+]

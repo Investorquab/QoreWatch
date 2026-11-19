@@ -1,0 +1,758 @@
+[
+ {
+  "hash": "1D57040994CBCB98066D07E32FA776302029173B4F7B8BF825562909CCA19B30",
+  "height": "10385839",
+  "index": 0,
+  "tx_result": {
+   "code": 0,
+   "data": "Eo4FCicvY29zbW9zLmV2bS52bS52MS5Nc2dFdGhlcmV1bVR4UmVzcG9uc2US4gQKQjB4NTQzNmMxNmVhZmYwNTkwYThkNmE5OGNjZDI5OGIzZTFhMzI4OGQ0MjZkMTY3ZmQ1YWJjZThjNzc5ODIxNjQzYhLrAwoqMHgzMDI5NDJCMDJDNWU2NzQ2RTkyYUNmNjRDOTVFM0VGNDJCREQ2NGVBEkIweDg3NDc5YmYyMDY4MzgyNjZkMGFjZDBiMTdlOWE2YTA0ODVkMjFjZDA3MTU4M2ZmMThlMjgxODFiODgxODExYzcSQjB4YTNjMTUyYWIyZGI5YTUyZTIwNTc1OWQyMTJkMjU0ZGM1MjUzNDc3Njg4ZTA3ZDYzNjMwYjRlOGZkYjk4MDczMRJCMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDBhMWFmMmU2NDE1NWRmOTM3YjJiMjJhNjRiYzhlMDA1NGI4ZWExOWRhEkIweDY5NmU3NjZmNjk2MzY1MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAaIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABq/za6IK/z+QQqQjB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDpCMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwKMm+EDDJvhA6IK0RcLkdJeuqdbl3bHFz9nuRIXVTLdo5aOcNb6Ug1DVHQLrt/NcG",
+   "log": "",
+   "info": "",
+   "gas_wanted": "270153",
+   "gas_used": "270153",
+   "events": [
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor15xhjueq4thun0v4j9fjtersq2juw5xw6w2zhxd",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "30392uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "30392uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor15xhjueq4thun0v4j9fjtersq2juw5xw6w2zhxd",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "30392uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor15xhjueq4thun0v4j9fjtersq2juw5xw6w2zhxd",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor15xhjueq4thun0v4j9fjtersq2juw5xw6w2zhxd",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "-212500000000",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "212500000000",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "tx",
+     "attributes": [
+      {
+       "key": "fee",
+       "value": "30392212500000000uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ethereum_tx",
+     "attributes": [
+      {
+       "key": "ethereumTxHash",
+       "value": "0x5436c16eaff0590a8d6a98ccd298b3e1a3288d426d167fd5abce8c779821643b",
+       "index": true
+      },
+      {
+       "key": "txIndex",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "pqc_evm_window_used",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor15xhjueq4thun0v4j9fjtersq2juw5xw6w2zhxd",
+       "index": true
+      },
+      {
+       "key": "evm_address",
+       "value": "0xA1aF2E64155Df937B2B22a64bC8E0054b8eA19DA",
+       "index": true
+      },
+      {
+       "key": "window_open_height",
+       "value": "10383726",
+       "index": true
+      },
+      {
+       "key": "used_txs",
+       "value": "3",
+       "index": true
+      },
+      {
+       "key": "used_value",
+       "value": "206715",
+       "index": true
+      },
+      {
+       "key": "tx_value",
+       "value": "68890",
+       "index": true
+      },
+      {
+       "key": "source",
+       "value": "ante",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ai_anomaly_check",
+     "attributes": [
+      {
+       "key": "score_millionths",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "action",
+       "value": "allow",
+       "index": true
+      },
+      {
+       "key": "is_anomalous",
+       "value": "false",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "action",
+       "value": "/cosmos.evm.vm.v1.MsgEthereumTx",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor15xhjueq4thun0v4j9fjtersq2juw5xw6w2zhxd",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ethereum_tx",
+     "attributes": [
+      {
+       "key": "amount",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "ethereumTxHash",
+       "value": "0x5436c16eaff0590a8d6a98ccd298b3e1a3288d426d167fd5abce8c779821643b",
+       "index": true
+      },
+      {
+       "key": "txIndex",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "txGasUsed",
+       "value": "270153",
+       "index": true
+      },
+      {
+       "key": "txHash",
+       "value": "1d57040994cbcb98066d07e32fa776302029173b4f7b8bf825562909cca19b30",
+       "index": true
+      },
+      {
+       "key": "recipient",
+       "value": "0x302942B02C5e6746E92aCf64C95E3EF42BDD64eA",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "module",
+       "value": "evm",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "0xa1af2e64155df937b2b22a64bc8e0054b8ea19da",
+       "index": true
+      },
+      {
+       "key": "txType",
+       "value": "2",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    }
+   ],
+   "codespace": ""
+  },
+  "tx": "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",
+  "time": "2026-11-19T17:49:46.133219091Z"
+ },
+ {
+  "hash": "0C23A42BA7F8FA64242CEE35A9A6B58F3F4FBDAFB33C729DA350BE78690D9C0A",
+  "height": "10385774",
+  "index": 5,
+  "tx_result": {
+   "code": 0,
+   "data": "EqoECicvY29zbW9zLmV2bS52bS52MS5Nc2dFdGhlcmV1bVR4UmVzcG9uc2US/gMKQjB4YmI3NWZlZTAxMzZlMjE4Nzk3ZWIxYzUyY2IwOThkMjMzNzVlY2RlYzE5ZGVhY2M2Y2JlODlkZTNiZDUxNDNkMBKHAwoqMHhFQ2IxNjU2MWNGRGZGMTAzMzZCMjc4ZjgxMDdBMDc3RkU3QTUzYzZkEkIweDhiZTAwNzljNTMxNjU5MTQxMzQ0Y2QxZmQwYTRmMjg0MTk0OTdmOTcyMmEzZGFhZmUzYjQxODZmNmI2NDU3ZTASQjB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwY2FmODJiZDhlYmQ4NzYzNGVmYjYxMGFlNjNhN2JjZjFjZTNhYzg3ZBJCMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwM2EwYzcxYzQyZGNlZjQ2M2Y4YjQ3MmNiMzk5OTFjZWRhYzJkYzFiIO7y+QQqQjB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAFOkIweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAo998BMPffATogmqouE8f1t/Tnx6ILDvG5N7XYCe9pixPVffKuJoGsfThA3uz81wY=",
+   "log": "",
+   "info": "",
+   "gas_wanted": "39590",
+   "gas_used": "28663",
+   "events": [
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "3959uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "3959uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "3959uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "-39590",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "39590",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "tx",
+     "attributes": [
+      {
+       "key": "fee",
+       "value": "3959000000039590uqor",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ethereum_tx",
+     "attributes": [
+      {
+       "key": "ethereumTxHash",
+       "value": "0xbb75fee0136e218797eb1c52cb098d23375ecdec19deacc6cbe89de3bd5143d0",
+       "index": true
+      },
+      {
+       "key": "txIndex",
+       "value": "5",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "pqc_evm_window_used",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      },
+      {
+       "key": "evm_address",
+       "value": "0xcaF82Bd8EBd87634eFb610aE63a7bCf1CE3ac87D",
+       "index": true
+      },
+      {
+       "key": "window_open_height",
+       "value": "10385709",
+       "index": true
+      },
+      {
+       "key": "used_txs",
+       "value": "6",
+       "index": true
+      },
+      {
+       "key": "used_value",
+       "value": "1010803",
+       "index": true
+      },
+      {
+       "key": "tx_value",
+       "value": "7919",
+       "index": true
+      },
+      {
+       "key": "source",
+       "value": "ante",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ai_anomaly_check",
+     "attributes": [
+      {
+       "key": "score_millionths",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "action",
+       "value": "allow",
+       "index": true
+      },
+      {
+       "key": "is_anomalous",
+       "value": "false",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "action",
+       "value": "/cosmos.evm.vm.v1.MsgEthereumTx",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "1092uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "1092uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "1092uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_spent",
+     "attributes": [
+      {
+       "key": "spender",
+       "value": "qor12yfe2jaupmtjruwxsec7hg7er60fhaa45uah26",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "1uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "coin_received",
+     "attributes": [
+      {
+       "key": "receiver",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "1uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "transfer",
+     "attributes": [
+      {
+       "key": "recipient",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "qor12yfe2jaupmtjruwxsec7hg7er60fhaa45uah26",
+       "index": true
+      },
+      {
+       "key": "amount",
+       "value": "1uqor",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "sender",
+       "value": "qor12yfe2jaupmtjruwxsec7hg7er60fhaa45uah26",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor17xpfvakm2amg962yls6f84z3kell8c5lyj5r7l",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "-700000010927",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "fractional_balance_change",
+     "attributes": [
+      {
+       "key": "address",
+       "value": "qor1etuzhk8tmpmrfmakzzhx8fau788r4jrapjkzlp",
+       "index": true
+      },
+      {
+       "key": "delta",
+       "value": "-299999989073",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "ethereum_tx",
+     "attributes": [
+      {
+       "key": "amount",
+       "value": "0",
+       "index": true
+      },
+      {
+       "key": "ethereumTxHash",
+       "value": "0xbb75fee0136e218797eb1c52cb098d23375ecdec19deacc6cbe89de3bd5143d0",
+       "index": true
+      },
+      {
+       "key": "txIndex",
+       "value": "5",
+       "index": true
+      },
+      {
+       "key": "txGasUsed",
+       "value": "28663",
+       "index": true
+      },
+      {
+       "key": "txHash",
+       "value": "0c23a42ba7f8fa64242cee35a9a6b58f3f4fbdafb33c729da350be78690d9c0a",
+       "index": true
+      },
+      {
+       "key": "recipient",
+       "value": "0xECb16561cFDfF10336B278f8107A077FE7A53c6d",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    },
+    {
+     "type": "message",
+     "attributes": [
+      {
+       "key": "module",
+       "value": "evm",
+       "index": true
+      },
+      {
+       "key": "sender",
+       "value": "0xcaf82bd8ebd87634efb610ae63a7bcf1ce3ac87d",
+       "index": true
+      },
+      {
+       "key": "txType",
+       "value": "2",
+       "index": true
+      },
+      {
+       "key": "msg_index",
+       "value": "0",
+       "index": true
+      }
+     ]
+    }
+   ],
+   "codespace": ""
+  },
+  "tx": "CoECCs0BCh8vY29zbW9zLmV2bS52bS52MS5Nc2dFdGhlcmV1bVR4EqkBKhTK+CvY69h2NO+2EK5jp7zxzjrIfTKQAQL4jYImSAcBhS6Q7dABgpqmlOyxZWHP3/EDNrJ4+BB6B3/npTxtgKTy/eOLAAAAAAAAAAAAAAAAA6DHHELc70Y/i0css5mRztrC3BvAAaBJKoNVa2zsbQPBMTxcvawzItREG3XvlHaJQPWxsnKubqBAfG7/rJW5jZDSBurOVULqKyW07dcd7N07wdEwqEk1a/o/LgosL2Nvc21vcy5ldm0udm0udjEuRXh0ZW5zaW9uT3B0aW9uc0V0aGVyZXVtVHgSIBIeChgKBGFxb3ISEDc5MTgwMDAwMDAwMzk1OTAQprUC",
+  "time": "2026-11-19T17:48:14.116126061Z"
+ }
+]
