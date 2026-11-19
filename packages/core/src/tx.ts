@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { decodeTxError } from "@qorechain/sdk";
 import { decodeTx, type DecodedMsg } from "./decode.js";
 import { addressesOf, enrich, fromMessages, parseEvents, type AbciEvent, type ChainEvent } from "./events.js";
@@ -152,6 +153,5 @@ function messageAddresses(messages: DecodedMsg[]): string[] {
 }
 
 async function sha256Hex(bytes: Uint8Array): Promise<string> {
-  const d = await crypto.subtle.digest("SHA-256", bytes);
-  return Buffer.from(d).toString("hex");
+  return createHash("sha256").update(bytes).digest("hex");
 }
