@@ -153,6 +153,7 @@ Three findings, F-8 to F-10 below. Each was first shown as a failing test, then 
 | **F-6** | Low (accuracy) | **False "classical-only signature" warning on key registration.** A key registration is classical-only by necessity. | Not flagged when the same transaction registers a post-quantum key (`8138100`); covered by a test and live step 27. |
 | **F-7** | High (shared servers) | **Setup could disturb other apps on a shared server.** Any existing Caddyfile mentioning `/usr/share/caddy` was taken for the package's placeholder and replaced, which would have dropped every other site. Setup also upgraded the system Node and ran `corepack enable`, which could change the tooling of other apps. The bot's port was fixed at 8787. Raised by the deploy session before anything ran on the real server. | Only the untouched placeholder is ever replaced; otherwise a backup and one appended import line, checked by `caddy adapt` and applied with a graceful reload, and restored if refused. A domain already served is refused. QoreWatch uses its own checksum-verified Node 22 when the system one is older, and no global tool changes. The port is a choice (`--port`), checked for conflicts. The service has memory limits (`c08df1a`). Re-tested on a copy of the shared server: three existing sites, a Node 18 app on 8787 and pnpm 8 unchanged; 25 of 25 checks. |
 | **F-8** | High | **Someone holding a fee allowance from an address could link that address as theirs.** The bot took the transaction's `fee_payer` for its signer; the Cosmos SDK puts the fee *granter* there when an allowance pays the fee. | The signer comes from the key that signed; a link paid through a fee grant is refused (`336d06a`, `ef98303`). Details below. |
+| **F-9** | Medium | **A group member could take the group's wallet link.** `/link` is admin-only, but its code was posted to the whole group, and the first address to claim a code wins it. | In groups the code goes to the admin privately (`ab065c2`). Details below. |
 
 Earlier, during the build, live testing also corrected the window-fix steps to match QoreX's real screens (`a310e6f`) and flagged dust-liquidity pools as thin instead of showing absurd prices (`7d013c0`).
 
@@ -177,6 +178,18 @@ The exploit is the test `apps/bot/test/security/feegrant-link.test.ts`: a record
 - `ef98303`: defence in depth. The link page always sends a plain self-transfer paid by the signer, so any link transaction that uses a fee grant is now refused (reason `fee_grant`) before the code is consumed.
 
 **Verification.** Both tests in `feegrant-link.test.ts` were run against the code before the fixes (`2f7d588`) and failed: the signer resolved to the victim's address, and the link went through. Both pass after. 61 of the 70 recorded real testnet transactions in `packages/core/test/fixtures/tx/` carry `acc_seq`, so the signer normally comes from the key that signed; for the rest, a fee granter is never taken for the signer, and `ef98303` refuses fee-granted links outright. One assumption remains: that QoreChain fills `fee_payer` the way the upstream Cosmos SDK does. The fix doesn't depend on it.
+
+### F-9 (Medium): a group member could take the group's wallet link
+
+**What was wrong.** In a group, only admins may run `/link`, but the reply (the code and the link page URL) was posted to the group, where every member could read it. A code belongs to whoever claims it first on the link page.
+
+**How it was exploited.** An admin sends `/link`. A non-admin member opens the posted link page first, connects their own wallet and approves the link transaction. The group's "My wallet" becomes the member's address: the admin-only rule is bypassed, and the group's alerts, `/check` and attestations follow the member's wallet. Test: `apps/bot/test/security/group-link.test.ts`.
+
+**Impact.** A member could take over what a group watches and attests to, and make the group's bot vouch for their wallet. Medium: it needs group membership and acting before the admin, and no funds are at risk.
+
+**Fix** (`ab065c2`). In a group, the code goes to the admin who asked, in a private chat; the group only hears "I sent you the link code in a private chat. Codes are never posted in groups." If the bot can't message the admin yet, it asks them to press Start first.
+
+**Verification.** `group-link.test.ts` was run against the code before the fix (`2f7d588`) and failed: the code was in the group message, and the member's claim and link succeeded. It passes after: the group message carries no code, the code reaches only the admin's private chat, and a member's claim no longer links. A member sending `/link` themselves is still refused, as before.
 
 ## Limitations
 
