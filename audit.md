@@ -24,8 +24,9 @@ It is not a third-party audit. Known gaps are under **Limitations**.
 | Web pages and API | tests + live browser | pass | CSP and headers, rate limit, escaping, zero console errors under the CSP |
 | Deployment | 25 server checks | 25 pass | Fresh and shared Ubuntu 24.04 servers: install, alert, rollback, reboot, restore, upgrade, neighbours untouched; **F-2** and **F-7** found here |
 | Secrets in the repository | 209 tracked files | none | Only the fake token of the test Bot API stand-in |
+| Second pass: attacking it again | 9 areas, working exploits | 3 found, 3 fixed | **F-8** (High), **F-9** and **F-10** (Medium); see section 7 |
 
-Seven findings, all fixed. None let anyone move funds, read anything private or silence a critical alert.
+Ten findings over two passes, all fixed. None let anyone move funds, read anything private or silence a critical alert. The worst, **F-8** (second pass), broke the promise that a linked address is really yours: it is fixed twice over.
 
 ## Threat model
 
@@ -139,7 +140,13 @@ The first pass proved the product works and refused the attacks we expected. The
 | Deploy kit | a neighbour on a shared server pre-creating the `/tmp` extraction folder and swapping it during extraction | refused: tar resets the folders to root, and the swap never won | simulation with an unprivileged user |
 | Contract | access, value, events, look-alike emitters | nothing to take: no owner, no funds, only the caller's own record; the bot reads events from this contract only | review, 7 Foundry tests |
 
-Three findings, F-8 to F-10 below. Each was first shown as a failing test, then fixed, then attacked again with variants.
+Three findings, F-8 to F-10 below. Each was first shown as a test that fails on the old code, then fixed, then the test was re-run.
+
+**Leads not confirmed** (kept open, with what would settle them):
+- **L-1:** the "hybrid-signed" check reads the transaction's PQC mode, not which account's post-quantum key signed. Only the `required` mode was ever seen on testnet, where every signer must hybrid-sign; a test on a chain in `optional` mode would settle it.
+- **L-2:** `deploy/scripts/ship.sh` uploads the bot settings to a fixed name, `/tmp/qorewatch-bot.env`. On a shared server another user could create that file first. With Ubuntu's default `fs.protected_regular` the upload then fails instead of leaking (the file is written with `umask 077`); a private `mktemp -d` folder would remove the doubt. Not changed in this pass, to keep the deployed kit as tested.
+- **L-3:** the API's rate limit trusts `X-Forwarded-For`. Caddy replaces that header, so only a process on the same machine could forge it.
+- **L-4:** `/api/attest/:code` lists the chat's linked accounts to whoever holds the code (the code is short-lived and now useless to anyone else, see F-10).
 
 ## Findings
 
@@ -206,10 +213,18 @@ The exploit is the test `apps/bot/test/security/feegrant-link.test.ts`: a record
 
 ## Limitations
 
-- **Not a third-party audit,** and testnet only.
+- **Not a third-party audit,** and testnet only. The second pass ran locally, against recorded transactions; it did not re-run the live testnet steps or the server checks.
 - **What never reaches a block is invisible.** QoreChain refuses some transactions at the door (for example a classical-only signature on a protected account). That refusal is the protection working, but no bot can report it.
 - **A watcher outage longer than the catch-up limit** (`MAX_CATCHUP_BLOCKS`, about 70 minutes by default) skips the oldest blocks rather than replaying days. `/status` and `/healthz` show the lag.
 - **`/healthz` is public.** It shows the block height and the last chain error, never a secret.
 - **The rate limit is in memory** and per process, which suits one server.
 - **QoreWatch trusts the public QoreChain endpoints** it reads (or the ones set in `QORE_*_URL`). A lying node could fake or hide alerts; running your own node removes that trust.
 - **The attest call is opaque in QoreX,** so users rely on the page's summary of what they sign. The contract only records data from the signer's own account and holds no funds.
+
+## How to re-run
+
+```
+pnpm install --frozen-lockfile
+pnpm check                                                   # lint, types, every test (Foundry included), build
+pnpm --filter @qorewatch/bot exec vitest run test/security   # the second pass's exploits, now regressions
+```
