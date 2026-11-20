@@ -10,7 +10,8 @@ It is not a third-party audit. Known gaps are under **Limitations**.
 | Commit audited | the commit that adds this file |
 | Contract | `QoreWatchAttest` at `0x52f29cb4f18ec44acbb997b94c0776e4e35ed273` (testnet, block 10389715) |
 | Wallet | QoreX 0.4.3 browser extension, testnet |
-| Automated tests | 148, all passing: 54 core, 81 bot, 6 web, 7 Foundry |
+| Automated tests | 152, all passing: 54 core, 85 bot (4 of them security regressions from the second pass), 6 web, 7 Foundry |
+| Second pass | 20 November 2026, an attacker-minded re-audit of commit `2f7d588` with working exploits, local only (section 7) |
 
 ## Summary
 
@@ -121,6 +122,24 @@ On a fresh Ubuntu 24.04 server (systemd, SSH), and again on a copy of a shared s
 | Shared server | setup refused port 8787 (taken) and a domain already served, changing nothing; with `--port 8790` the only Caddyfile change was one appended import line; the other sites, the Node 18 app, the system node and pnpm were unchanged; QoreWatch ran on its own Node 22 using about 60 MB |
 
 The systemd unit gives the bot no capabilities, a read-only system, a private `/tmp` and devices, and write access only to `/var/lib/qorewatch`. systemd reads the token file for it.
+
+## 7. Second pass: attacking it again (20 November 2026)
+
+The first pass proved the product works and refused the attacks we expected. The second pass asked a different question: **what could an attacker make QoreWatch believe or do that its owner never intended?** It attacked commit `2f7d588` with working exploits, written as tests in `apps/bot/test/security/`, against the real code: the fake Telegram Bot API, the real HTTP app and recorded testnet transactions. Nothing was sent to the deployed site, the live bot or QoreChain. It started where a takeover would start: how the bot decides who signed a transaction, codes that are shown to more than one person, and the promises the README and the bot make ("so I know this address is yours", "the code works once, only for the address you connect").
+
+| Area | Attacks tried | Result | Evidence |
+| --- | --- | --- | --- |
+| Leaks | secret scan of the tree, all 56 commits and the built pages; by hand: env files, keys and databases ever committed | none (the one hit is the QoreX handle registry's **public** key) | scan output, private audit log |
+| Who signed a link | fee grant from the target (`fee.granter`), a separate fee payer, a transaction without `acc_seq` | **F-8** found and fixed | `security/feegrant-link.test.ts` |
+| Link codes in groups | a member claims the code an admin asked for | **F-9** found and fixed | `security/group-link.test.ts` |
+| Attest codes | the code used first, from another account | **F-10** found and fixed | `security/attest-frontrun.test.ts` |
+| Buttons and prompts | forged callback data for every action; a member answering an admin's waiting prompt | refused: every change re-checks the group admin; a member's message only clears the admin's prompt | review of every callback branch |
+| Link API | guessing codes, lowercase codes, arrays and `__proto__` in the claim body, a link code on the attest route, a burst against the rate limit | refused; 31^8 possible codes at 120 requests a minute | exploit scripts, private audit log |
+| Fix pages | a crafted `/fix/approval` link pointing at an NFT contract (same `approve` selector) | refused: the page reads `allowance` first, which an NFT does not have | page code review |
+| Deploy kit | a neighbour on a shared server pre-creating the `/tmp` extraction folder and swapping it during extraction | refused: tar resets the folders to root, and the swap never won | simulation with an unprivileged user |
+| Contract | access, value, events, look-alike emitters | nothing to take: no owner, no funds, only the caller's own record; the bot reads events from this contract only | review, 7 Foundry tests |
+
+Three findings, F-8 to F-10 below. Each was first shown as a failing test, then fixed, then attacked again with variants.
 
 ## Findings
 
