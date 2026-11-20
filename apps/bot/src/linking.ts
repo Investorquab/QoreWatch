@@ -7,7 +7,7 @@ import { pages } from "./links.js";
 export const LINK_MEMO = (code: string) => `QoreWatch link ${code}`;
 const LINK_RE = /\bQoreWatch link ([A-HJ-NP-Z2-9]{8})\b/;
 
-export type LinkOutcome = { linked: true; chatId: number; address: string } | { linked: false; reason: "no_code" | "failed_tx" | "not_hybrid" | "no_signer" | "bad_code" };
+export type LinkOutcome = { linked: true; chatId: number; address: string } | { linked: false; reason: "no_code" | "failed_tx" | "not_hybrid" | "no_signer" | "fee_grant" | "bad_code" };
 
 /**
  * Complete a link when a transaction carries a QoreWatch link code in its memo.
@@ -20,6 +20,9 @@ export async function handleLinkTx(tx: TxRecord, store: Store, messenger: Messen
   if (tx.failed) return { linked: false, reason: "failed_tx" };
   if (!tx.signer) return { linked: false, reason: "no_signer" };
   if (!tx.hybridSigned) return { linked: false, reason: "not_hybrid" };
+  // The link page sends a plain self-transfer paid by the signer. A link paid through someone else's fee
+  // allowance is never needed, so it is refused outright (defence in depth for audit F-8).
+  if (tx.feeGranter) return { linked: false, reason: "fee_grant" };
   const used = store.consumeCode(m[1]!, "link", tx.signer);
   if (!used) return { linked: false, reason: "bad_code" };
   const isNew = !store.watch(used.chatId, tx.signer);

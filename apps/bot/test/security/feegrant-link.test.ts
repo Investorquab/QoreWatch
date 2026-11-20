@@ -58,4 +58,18 @@ describe("security: link signer cannot be spoofed with a fee grant", () => {
     expect(store.watch(ATTACKER_CHAT, VICTIM)?.owned).not.toBe(true);
     store.close();
   });
+
+  it("refuses any link transaction paid through a fee grant, even for the signer's own address", async () => {
+    const VICTIM = "qor1kkkytv23u0aagmyp5m6h27r9wlxan0hj5q7w5c";
+    const store = new Store(":memory:");
+    store.ensureChat(777, "private");
+    const code = store.createCode(777, "link");
+    const { tx, attacker } = await feeGrantedLinkTx(VICTIM, code);
+    expect(store.claimCode(code, attacker)).toBe("claimed");
+    const m: Messenger = { send: async () => ({ ok: true }) };
+    const out = await handleLinkTx(tx, store, m, "https://qorewatch.test");
+    expect(out).toEqual({ linked: false, reason: "fee_grant" });
+    expect(store.watch(777, attacker)?.owned).not.toBe(true);
+    store.close();
+  });
 });
