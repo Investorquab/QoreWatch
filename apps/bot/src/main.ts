@@ -82,9 +82,9 @@ async function main(): Promise<void> {
   await bot.init();
   await bot.api.setMyCommands(COMMANDS).catch((e) => log.warn("could not set the command menu", { error: (e as Error).message }));
   await bot.api
-    .setMyDescription("I watch QoreChain addresses and message you when money moves, your post-quantum key changes, a spending window opens or someone gets permission to spend for you. Link your wallet with QoreX: I never see a key.")
+    .setMyDescription(`I watch QoreChain addresses and message you when money moves, your post-quantum key changes, a spending window opens or someone gets permission to spend for you. Link your wallet with QoreX: I never see a key.\n\n${config.publicUrl}/`)
     .catch(() => undefined);
-  await bot.api.setMyShortDescription("Post-quantum wallet alerts for QoreChain.").catch(() => undefined);
+  await bot.api.setMyShortDescription(`Post-quantum wallet alerts for QoreChain. ${config.publicUrl}/`).catch(() => undefined);
   log.info("telegram bot ready", { username: bot.botInfo.username });
 
   const loops: Promise<unknown>[] = [];
