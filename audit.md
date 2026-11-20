@@ -152,8 +152,31 @@ Three findings, F-8 to F-10 below. Each was first shown as a failing test, then 
 | **F-5** | Low (operations) | **A busy port crashed the bot with an unhandled error** after logging "listening". | The listening line waits for the port; a busy port exits with a clear message (`73cead9`). |
 | **F-6** | Low (accuracy) | **False "classical-only signature" warning on key registration.** A key registration is classical-only by necessity. | Not flagged when the same transaction registers a post-quantum key (`8138100`); covered by a test and live step 27. |
 | **F-7** | High (shared servers) | **Setup could disturb other apps on a shared server.** Any existing Caddyfile mentioning `/usr/share/caddy` was taken for the package's placeholder and replaced, which would have dropped every other site. Setup also upgraded the system Node and ran `corepack enable`, which could change the tooling of other apps. The bot's port was fixed at 8787. Raised by the deploy session before anything ran on the real server. | Only the untouched placeholder is ever replaced; otherwise a backup and one appended import line, checked by `caddy adapt` and applied with a graceful reload, and restored if refused. A domain already served is refused. QoreWatch uses its own checksum-verified Node 22 when the system one is older, and no global tool changes. The port is a choice (`--port`), checked for conflicts. The service has memory limits (`c08df1a`). Re-tested on a copy of the shared server: three existing sites, a Node 18 app on 8787 and pnpm 8 unchanged; 25 of 25 checks. |
+| **F-8** | High | **Someone holding a fee allowance from an address could link that address as theirs.** The bot took the transaction's `fee_payer` for its signer; the Cosmos SDK puts the fee *granter* there when an allowance pays the fee. | The signer comes from the key that signed; a link paid through a fee grant is refused (`336d06a`, `ef98303`). Details below. |
 
 Earlier, during the build, live testing also corrected the window-fix steps to match QoreX's real screens (`a310e6f`) and flagged dust-liquidity pools as thin instead of showing absurd prices (`7d013c0`).
+
+## Second-pass findings in detail
+
+### F-8 (High): a fee grant let its grantee link the granter's address as "owned"
+
+**What was wrong.** To link a wallet, the owner sends a tiny transaction with a one-time code, and the bot links *the account that signed it*. The bot decided who signed by reading the `tx` event's `fee_payer` first (`packages/core/src/tx.ts`, `findSigner`). In the Cosmos SDK, that attribute names the account the fee was **taken from**, which is the fee **granter** whenever a fee allowance pays the fee, not the signer.
+
+**How it was exploited.**
+1. The victim (for example a treasury or a sponsor) has given the attacker a fee allowance, which is common for sponsored fees.
+2. The attacker asks QoreWatch for a link code and, on the link page, claims it with the **victim's** address (the claim step accepts any address; the signature is meant to prove ownership).
+3. The attacker signs their own hybrid (ML-DSA-87) link transaction with `fee.granter` set to the victim.
+4. The bot read `fee_payer` = victim, found a valid hybrid signature, and replied: "✅ Wallet linked … QoreX signed the link with your post-quantum key, so I know this address is yours."
+
+The exploit is the test `apps/bot/test/security/feegrant-link.test.ts`: a recorded testnet transaction re-encoded with a fee granter, with the events the SDK emits for a granted fee. Before the fix it linked the victim's address.
+
+**Impact.** It broke the product's core promise, "a linked address is really yours". The attacker's chat would then show the victim's address as "My wallet" and could produce attestations and public `/check` cards in its name. No funds could move (QoreWatch never signs anything), which is why it is High and not Critical.
+
+**Fix.**
+- `336d06a`: the signer now comes from the ante handler's `acc_seq` (the key that signed) or the EVM sender, and `fee_payer` is never used when the transaction names a fee granter.
+- `ef98303`: defence in depth. The link page always sends a plain self-transfer paid by the signer, so any link transaction that uses a fee grant is now refused (reason `fee_grant`) before the code is consumed.
+
+**Verification.** Both tests in `feegrant-link.test.ts` were run against the code before the fixes (`2f7d588`) and failed: the signer resolved to the victim's address, and the link went through. Both pass after. 61 of the 70 recorded real testnet transactions in `packages/core/test/fixtures/tx/` carry `acc_seq`, so the signer normally comes from the key that signed; for the rest, a fee granter is never taken for the signer, and `ef98303` refuses fee-granted links outright. One assumption remains: that QoreChain fills `fee_payer` the way the upstream Cosmos SDK does. The fix doesn't depend on it.
 
 ## Limitations
 
