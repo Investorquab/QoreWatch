@@ -21,12 +21,28 @@ describe("Store", () => {
   it("migrates a new database and reopens it without re-running migrations", () => {
     const path = fileStore();
     const s1 = new Store(path);
-    expect(s1.schemaVersion).toBe(1);
+    expect(s1.schemaVersion).toBe(2);
     s1.ensureChat(1, "private");
     s1.close();
     const s2 = new Store(path);
-    expect(s2.schemaVersion).toBe(1);
+    expect(s2.schemaVersion).toBe(2);
     expect(s2.chat(1)?.type).toBe("private");
+    s2.close();
+  });
+
+  it("upgrades a version 1 database in place, keeping its data", () => {
+    const path = fileStore();
+    const s1 = new Store(path);
+    s1.ensureChat(1, "private");
+    const code = s1.createCode(1, "link");
+    // Turn it back into a version 1 database, as a deployment made before link claims has.
+    s1.db.exec("ALTER TABLE codes DROP COLUMN claimed_by; UPDATE schema_version SET v = 1;");
+    s1.close();
+    const s2 = new Store(path);
+    expect(s2.schemaVersion).toBe(2);
+    expect(s2.chat(1)?.type).toBe("private");
+    expect(s2.codeInfo(code)).toMatchObject({ chatId: 1, claimedBy: null });
+    expect(s2.claimCode(code, "qor1ukeppmkglj3d36ucej3rsntt0yx9lvhu83egha")).toBe("claimed");
     s2.close();
   });
 
@@ -74,11 +90,43 @@ describe("Store", () => {
     const code = s.createCode(7, "link", t0);
     expect(code).toMatch(/^[A-HJ-NP-Z2-9]{8}$/);
     expect(s.consumeCode(code, "attest", A, t0)).toBeUndefined();
+    expect(s.consumeCode(code, "link", A, t0 + 500)).toBeUndefined(); // not claimed yet
+    expect(s.claimCode(code, A, t0 + 600)).toBe("claimed");
     expect(s.consumeCode(code, "link", A, t0 + 1000)).toEqual({ chatId: 7 });
     expect(s.consumeCode(code, "link", A, t0 + 2000)).toBeUndefined();
     const late = s.createCode(7, "link", t0);
+    expect(s.claimCode(late, A, t0)).toBe("claimed");
     expect(s.consumeCode(late, "link", A, t0 + LIMITS.codeTtlMs + 1)).toBeUndefined();
+    expect(s.claimCode(late, A, t0 + LIMITS.codeTtlMs + 1)).toBe("invalid");
     expect(s.consumeCode("NOPE2345", "link", A, t0)).toBeUndefined();
+  });
+
+  it("binds a link code to the address that claimed it, so a copied code is useless", () => {
+    const s = new Store(":memory:");
+    s.ensureChat(7, "private");
+    const B = "qor1sx6dpevcmw8464tr76dsehsdvj7euy4rknm23c";
+    const code = s.createCode(7, "link");
+    expect(s.claimCode(code, A)).toBe("claimed");
+    expect(s.claimCode(code, A)).toBe("claimed"); // a page reload
+    expect(s.claimCode(code, B)).toBe("taken");
+    // Someone copies the pending code into their own transaction: it does not link them.
+    expect(s.consumeCode(code, "link", B)).toBeUndefined();
+    // The rightful signer still links.
+    expect(s.consumeCode(code, "link", A)).toEqual({ chatId: 7 });
+    expect(s.codeInfo(code)).toMatchObject({ claimedBy: A, address: A });
+    expect(s.claimCode(code, A)).toBe("invalid"); // used
+    expect(s.claimCode("NOPE2345", A)).toBe("invalid");
+    expect(s.claimCode(s.createCode(7, "attest"), A)).toBe("invalid");
+  });
+
+  it("draws codes from all 31 characters evenly", () => {
+    const s = new Store(":memory:");
+    s.ensureChat(7, "private");
+    const counts = new Map<string, number>();
+    for (let i = 0; i < 2000; i++) for (const ch of s.createCode(7, "attest")) counts.set(ch, (counts.get(ch) ?? 0) + 1);
+    expect(counts.size).toBe(31);
+    const expected = 16000 / 31;
+    for (const n of counts.values()) expect(Math.abs(n - expected)).toBeLessThan(expected * 0.25);
   });
 
   it("de-duplicates alerts per chat", () => {

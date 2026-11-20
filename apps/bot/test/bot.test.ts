@@ -92,6 +92,7 @@ describe("QoreWatch bot over the Telegram Bot API", () => {
     const code = /QoreWatch link ([A-Z0-9]{8})/.exec(lastText())![1]!;
     const [raw] = txFixture("bank_send");
     const tx = await buildTx({ tx: raw!.tx, result: raw!.tx_result as never, height: raw!.height, time: raw!.time, hash: raw!.hash });
+    store.claimCode(code, tx.signer!);
     const outcome = await handleLinkTx({ ...tx, memo: LINK_MEMO(code) }, store, messenger, "https://qorewatch.test");
     expect(outcome).toMatchObject({ linked: true, chatId: USER, address: tx.signer });
     expect(store.watch(USER, tx.signer!)).toMatchObject({ owned: true, label: "My wallet", linkedTx: tx.hash });
@@ -100,6 +101,7 @@ describe("QoreWatch bot over the Telegram Bot API", () => {
     expect(await handleLinkTx({ ...tx, memo: LINK_MEMO(code) }, store, messenger, "https://qorewatch.test")).toMatchObject({ linked: false, reason: "bad_code" });
     // A failed or classical-only transaction never links.
     const code2 = store.createCode(USER, "link");
+    store.claimCode(code2, tx.signer!);
     expect(await handleLinkTx({ ...tx, memo: LINK_MEMO(code2), failed: true }, store, messenger, "x")).toMatchObject({ reason: "failed_tx" });
     expect(await handleLinkTx({ ...tx, memo: LINK_MEMO(code2), hybridSigned: false }, store, messenger, "x")).toMatchObject({ reason: "not_hybrid" });
   });

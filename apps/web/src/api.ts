@@ -8,8 +8,8 @@ export class ApiError extends Error {
   }
 }
 
-export async function api<T>(path: string): Promise<T> {
-  const r = await fetch(`/api${path}`, { headers: { accept: "application/json" } });
+export async function api<T>(path: string, post?: unknown): Promise<T> {
+  const r = await fetch(`/api${path}`, post === undefined ? { headers: { accept: "application/json" } } : { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify(post) });
   let body: unknown;
   try {
     body = await r.json();

@@ -2,7 +2,7 @@ import { Hono, type Context } from "hono";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { existsSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import { classify, explainTx, isEvmAddress, plain, qorToEvm, toQor } from "@qorewatch/core";
+import { classify, explainTx, isEvmAddress, plain, qorToEvm, toQor, isQorAddress } from "@qorewatch/core";
 import { canonicalReport, codeBytes, rememberIssued, reportHash } from "../attest.js";
 import type { Chain } from "../chain.js";
 import type { Store } from "../db/store.js";
@@ -106,6 +106,19 @@ export function createServer(deps: ServerDeps): Hono {
     if (info.usedAt) return c.json({ status: "linked", address: info.address });
     if (info.expiresAt < Date.now()) return c.json({ status: "expired" });
     return c.json({ status: "pending", memo: LINK_MEMO(code), expiresAt: info.expiresAt });
+  });
+
+  // Before QoreX signs, the page binds the code to the connected address: a copied code is then useless.
+  api.post("/link/:code/claim", async (c) => {
+    const code = c.req.param("code").toUpperCase();
+    if (!/^[A-HJ-NP-Z2-9]{8}$/.test(code)) return c.json({ error: "This link is not valid." }, 400);
+    const body = (await c.req.json().catch(() => ({}))) as { address?: unknown };
+    const address = typeof body.address === "string" ? body.address.trim().toLowerCase() : "";
+    if (!isQorAddress(address) || address.length > 60) return c.json({ error: "Connect QoreX with a qor1 account first." }, 400);
+    const r = deps.store.claimCode(code, address);
+    if (r === "taken") return c.json({ error: "This code is already tied to another address. Send /link in Telegram for a new one." }, 409);
+    if (r === "invalid") return c.json({ error: "This link has expired or was already used. Send /link in Telegram for a new one." }, 410);
+    return c.json({ status: "claimed", address });
   });
 
   api.get("/attest/:code", async (c) => {

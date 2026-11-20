@@ -56,6 +56,8 @@ async function start() {
       send.onclick = async () => {
         setBusy(send, true, "Waiting for QoreX…");
         try {
+          // Tie the code to this address first: a copy of the code is then useless to anyone else.
+          await api(`/link/${code}/claim`, { address: account.qor });
           const hash = await selfSend(account, s.memo);
           $("#s2").classList.replace("active", "done");
           $("#s3").classList.add("active");
@@ -66,7 +68,7 @@ async function start() {
           if (ok) done(account.qor, hash);
           else notice($("#wait-msg"), "warn", "QoreWatch has not confirmed yet. The chain may be slow; check Telegram in a minute.");
         } catch (e) {
-          notice($("#send-msg"), "bad", walletHelp(e));
+          notice($("#send-msg"), "bad", e instanceof ApiError ? esc(e.message) : walletHelp(e));
           setBusy(send, false);
         }
       };

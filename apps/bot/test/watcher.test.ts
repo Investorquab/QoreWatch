@@ -82,8 +82,18 @@ describe("Watcher", () => {
     const body = TxBody.decode(raw.bodyBytes);
     body.memo = LINK_MEMO(code);
     raw.bodyBytes = TxBody.encode(body).finish();
-    fc.state.blocks[3001] = [{ tx: Buffer.from(TxRaw.encode(raw).finish()).toString("base64"), tx_result: t.tx_result }];
+    const encoded = Buffer.from(TxRaw.encode(raw).finish()).toString("base64");
+    const { buildTx } = await import("@qorewatch/core");
+    const signer = (await buildTx({ tx: encoded, result: t.tx_result as never, height: 3001, time: t.time, hash: "X" })).signer!;
+    // A code nobody claimed on the link page does not link anyone.
+    fc.state.blocks[3001] = [{ tx: encoded, tx_result: t.tx_result }];
     fc.state.height = 3001;
+    await watcher.tick();
+    expect(store.watches(7)).toHaveLength(0);
+    // Claimed by the signer's address, the same memo links it.
+    expect(store.claimCode(code, signer)).toBe("claimed");
+    fc.state.blocks[3002] = [{ tx: encoded, tx_result: t.tx_result }];
+    fc.state.height = 3002;
     await watcher.tick();
     const w = store.watches(7);
     expect(w).toHaveLength(1);

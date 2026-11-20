@@ -35,10 +35,28 @@ describe("HTTP API", () => {
     store.ensureChat(1, "private");
     const code = store.createCode(1, "link");
     expect(await (await app.request(`/api/link/${code}`)).json()).toMatchObject({ status: "pending", memo: `QoreWatch link ${code}` });
+    store.claimCode(code, ME);
     store.consumeCode(code, "link", ME);
     expect(await (await app.request(`/api/link/${code}`)).json()).toEqual({ status: "linked", address: ME });
     expect((await app.request("/api/link/NOPE")).status).toBe(400);
     expect((await app.request("/api/link/ABCDEFGH")).status).toBe(404);
+  });
+
+  it("lets the link page claim a code for the connected address, once", async () => {
+    const { store, app } = setup();
+    store.ensureChat(1, "private");
+    const code = store.createCode(1, "link");
+    const post = (c: string, body: unknown) => app.request(`/api/link/${c}/claim`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    expect((await post(code, { address: "not-an-address" })).status).toBe(400);
+    expect((await post(code, {})).status).toBe(400);
+    expect((await post("NOPE", { address: ME })).status).toBe(400);
+    expect((await post("ABCDEFGH", { address: ME })).status).toBe(410);
+    const ok = await post(code, { address: ME.toUpperCase() });
+    expect(ok.status).toBe(200);
+    expect(await ok.json()).toEqual({ status: "claimed", address: ME });
+    expect((await post(code, { address: ME })).status).toBe(200);
+    expect((await post(code, { address: "qor1sx6dpevcmw8464tr76dsehsdvj7euy4rknm23c" })).status).toBe(409);
+    expect(store.codeInfo(code)?.claimedBy).toBe(ME);
   });
 
   it("serves the window, account, grants and check of an address, and refuses non-addresses", async () => {

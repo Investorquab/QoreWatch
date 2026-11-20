@@ -193,12 +193,12 @@ export function createBot(deps: BotDeps): { bot: Bot; messenger: Messenger } {
       html: [
         "🔗 <b>Link your wallet</b>",
         "",
-        "1. Open the link page on the computer where QoreX is installed.",
-        "2. Connect QoreX and approve one tiny transaction to yourself (1 uqor, plus the network fee). Its note carries your code:",
+        "1. Open the link page on the computer where QoreX is installed, and connect QoreX there.",
+        "2. Approve one tiny transaction to yourself (1 uqor, plus the network fee). Its note carries your code:",
         `<code>${LINK_MEMO(code)}</code>`,
         "3. I see it on chain within seconds and confirm here.",
         "",
-        "QoreX signs it with your post-quantum key, which proves the address is yours. I never see or need a key. The code works once, for 15 minutes.",
+        "QoreX signs it with your post-quantum key, which proves the address is yours. I never see or need a key. The code works once, for 15 minutes, and only for the address you connect on the page.",
       ].join("\n"),
       buttons: [[{ text: "Open the link page", url: pages(config.publicUrl).link(code) }]],
     });

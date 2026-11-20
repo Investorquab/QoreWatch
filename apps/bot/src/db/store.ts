@@ -72,6 +72,9 @@ const MIGRATIONS: string[] = [
   CREATE TABLE proposals (id TEXT PRIMARY KEY, status TEXT NOT NULL, voting_end TEXT, notified INTEGER NOT NULL DEFAULT 0);
   CREATE TABLE kv (k TEXT PRIMARY KEY, v TEXT NOT NULL);
   `,
+  // 2: a link code is claimed by the address QoreX connected on the link page, before it signs.
+  // Only that address's transaction can then use the code, so nobody can copy a pending code.
+  `ALTER TABLE codes ADD COLUMN claimed_by TEXT;`,
 ];
 
 export type ChatType = "private" | "group" | "supergroup" | "channel";
@@ -272,8 +275,13 @@ export class Store {
   createCode(chatId: number, purpose: "link" | "attest", now = Date.now()): string {
     const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
     for (;;) {
-      const bytes = randomBytes(8);
-      const code = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
+      // Rejection sampling: 248 = 8 × 31, so every character is equally likely.
+      const code = Array.from(randomBytes(24))
+        .filter((b) => b < 248)
+        .slice(0, 8)
+        .map((b) => alphabet[b % alphabet.length])
+        .join("");
+      if (code.length < 8) continue;
       try {
         this.db.prepare("INSERT INTO codes (code, chat_id, purpose, created_at, expires_at) VALUES (?, ?, ?, ?, ?)").run(code, chatId, purpose, now, now + LIMITS.codeTtlMs);
         return code;
@@ -288,15 +296,31 @@ export class Store {
     return this.tx(() => {
       const r = this.db.prepare("SELECT * FROM codes WHERE code = ?").get(code) as Row | undefined;
       if (!r || r.purpose !== purpose || r.used_at !== null || Number(r.expires_at) < now) return undefined;
+      // A link code only works for the address that claimed it on the link page.
+      if (purpose === "link" && r.claimed_by !== address) return undefined;
       this.db.prepare("UPDATE codes SET used_at = ?, address = ? WHERE code = ?").run(now, address, code);
       return { chatId: Number(r.chat_id) };
     });
   }
 
-  codeInfo(code: string): { chatId: number; purpose: string; expiresAt: number; usedAt: number | null; address: string | null } | undefined {
+  /**
+   * Bind a pending link code to the address QoreX connected, before the page asks it to sign.
+   * The first claim wins; the same address may claim again (a page reload).
+   */
+  claimCode(code: string, address: string, now = Date.now()): "claimed" | "taken" | "invalid" {
+    return this.tx(() => {
+      const r = this.db.prepare("SELECT * FROM codes WHERE code = ?").get(code) as Row | undefined;
+      if (!r || r.purpose !== "link" || r.used_at !== null || Number(r.expires_at) < now) return "invalid";
+      if (r.claimed_by !== null && r.claimed_by !== address) return "taken";
+      this.db.prepare("UPDATE codes SET claimed_by = ? WHERE code = ?").run(address, code);
+      return "claimed";
+    });
+  }
+
+  codeInfo(code: string): { chatId: number; purpose: string; expiresAt: number; usedAt: number | null; address: string | null; claimedBy: string | null } | undefined {
     const r = this.db.prepare("SELECT * FROM codes WHERE code = ?").get(code) as Row | undefined;
     if (!r) return undefined;
-    return { chatId: Number(r.chat_id), purpose: String(r.purpose), expiresAt: Number(r.expires_at), usedAt: r.used_at === null ? null : Number(r.used_at), address: (r.address as string | null) ?? null };
+    return { chatId: Number(r.chat_id), purpose: String(r.purpose), expiresAt: Number(r.expires_at), usedAt: r.used_at === null ? null : Number(r.used_at), address: (r.address as string | null) ?? null, claimedBy: (r.claimed_by as string | null) ?? null };
   }
 
   // ---- cursors and key-value --------------------------------------------------------------------------------
