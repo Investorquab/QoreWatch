@@ -154,6 +154,7 @@ Three findings, F-8 to F-10 below. Each was first shown as a failing test, then 
 | **F-7** | High (shared servers) | **Setup could disturb other apps on a shared server.** Any existing Caddyfile mentioning `/usr/share/caddy` was taken for the package's placeholder and replaced, which would have dropped every other site. Setup also upgraded the system Node and ran `corepack enable`, which could change the tooling of other apps. The bot's port was fixed at 8787. Raised by the deploy session before anything ran on the real server. | Only the untouched placeholder is ever replaced; otherwise a backup and one appended import line, checked by `caddy adapt` and applied with a graceful reload, and restored if refused. A domain already served is refused. QoreWatch uses its own checksum-verified Node 22 when the system one is older, and no global tool changes. The port is a choice (`--port`), checked for conflicts. The service has memory limits (`c08df1a`). Re-tested on a copy of the shared server: three existing sites, a Node 18 app on 8787 and pnpm 8 unchanged; 25 of 25 checks. |
 | **F-8** | High | **Someone holding a fee allowance from an address could link that address as theirs.** The bot took the transaction's `fee_payer` for its signer; the Cosmos SDK puts the fee *granter* there when an allowance pays the fee. | The signer comes from the key that signed; a link paid through a fee grant is refused (`336d06a`, `ef98303`). Details below. |
 | **F-9** | Medium | **A group member could take the group's wallet link.** `/link` is admin-only, but its code was posted to the whole group, and the first address to claim a code wins it. | In groups the code goes to the admin privately (`ab065c2`). Details below. |
+| **F-10** | Medium | **Anyone could burn an attest code and attest in the owner's place.** The code is public once the attest transaction is pending, and was shown in chats. Used first from any account, it counted. | The code counts only for an account the chat linked (`95eb620`). Details below. |
 
 Earlier, during the build, live testing also corrected the window-fix steps to match QoreX's real screens (`a310e6f`) and flagged dust-liquidity pools as thin instead of showing absurd prices (`7d013c0`).
 
@@ -190,6 +191,18 @@ The exploit is the test `apps/bot/test/security/feegrant-link.test.ts`: a record
 **Fix** (`ab065c2`). In a group, the code goes to the admin who asked, in a private chat; the group only hears "I sent you the link code in a private chat. Codes are never posted in groups." If the bot can't message the admin yet, it asks them to press Start first.
 
 **Verification.** `group-link.test.ts` was run against the code before the fix (`2f7d588`) and failed: the code was in the group message, and the member's claim and link succeeded. It passes after: the group message carries no code, the code reaches only the admin's private chat, and a member's claim no longer links. A member sending `/link` themselves is still refused, as before.
+
+### F-10 (Medium): an attest code could be used first from another account
+
+**What was wrong.** To attest a `/check` score on chain, the bot gives the chat a code; the owner's transaction to `QoreWatchAttest` carries it as `bytes8` calldata. That calldata is public as soon as the transaction is pending, and in groups the code was visible to members. The bot consumed the code for **whichever account** attested with it first (`apps/bot/src/attest.ts`). This is the same class of bug as F-1 (a copied link code), which the first pass fixed for link codes only.
+
+**How it was exploited.** The attacker copies the code from the pending transaction (or the group), sends their own `attest(score 100, code)` from another account first, and the owner's chat receives "<attacker> attested a score of 100", while the owner's real attestation is ignored as "code already used". Test: `apps/bot/test/security/attest-frontrun.test.ts`.
+
+**Impact.** False attestation messages in the owner's chat and a denied attestation for the owner. Medium: nothing of value moves, but it undermines what attestations mean.
+
+**Fix** (`95eb620`). A code is consumed only when the attesting account is one the chat has linked; any other use is ignored and leaves the code for the owner.
+
+**Verification.** `attest-frontrun.test.ts` was run against the code before the fix (`2f7d588`) and failed: the attacker's attestation was reported to the owner's chat and the owner's was ignored. It passes after: the attacker's use is ignored, the code stays valid, and the owner's attestation is confirmed. The same "first user wins" class was fixed for link codes in the first pass (F-1), which binds a link code to the address claimed on the page.
 
 ## Limitations
 
