@@ -64,6 +64,10 @@ export function attestHook(d: { store: Store; chain: Chain; messenger: Messenger
     async handle(a: { account: string; score: number; reportHash: Hex; code: string; txHash: string; block: number }): Promise<boolean> {
       if (!/^[A-HJ-NP-Z2-9]{8}$/.test(a.code)) return false;
       const qor = evmToQor(a.account);
+      // The code is public once its transaction is pending (calldata) and is shown in the chat. It only
+      // counts for an account this chat linked, so a copy used first from another account changes nothing.
+      const info = d.store.codeInfo(a.code);
+      if (!info || !d.store.watch(info.chatId, qor)?.owned) return false;
       const used = d.store.consumeCode(a.code, "attest", qor);
       if (!used) return false;
       const issued = d.store.get(`attest:${a.code}`);

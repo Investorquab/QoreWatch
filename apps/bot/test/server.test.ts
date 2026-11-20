@@ -123,6 +123,7 @@ describe("attestations", () => {
     const { store, fc } = setup();
     const m = new FakeMessenger();
     store.ensureChat(1, "private");
+    store.addWatch(1, ME, { owned: true });
     const code = store.createCode(1, "attest");
     const hook = attestHook({ store, chain: fc.chain, messenger: m, log: silentLogger, contract: config.attestContract!, publicUrl: "https://qw.test" });
     await hook.handle({ account: "0x35750cc522969f297f421e411e0cb4493572b1a8", score: 100, reportHash: reportHash("made up"), code, txHash: "0xabc", block: 1 });
