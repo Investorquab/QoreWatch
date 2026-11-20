@@ -71,8 +71,13 @@ async function main(): Promise<void> {
 
   const web = webDir();
   const app = createServer({ config, store, chain, log, ...(web ? { webDir: web } : {}), status: () => watcher.status });
-  const server = serve({ fetch: app.fetch, hostname: config.httpHost, port: config.httpPort });
-  log.info("http server listening", { host: config.httpHost, port: config.httpPort, pages: web ? "yes" : "no (build apps/web)" });
+  const server = serve({ fetch: app.fetch, hostname: config.httpHost, port: config.httpPort }, () =>
+    log.info("http server listening", { host: config.httpHost, port: config.httpPort, pages: web ? "yes" : "no (build apps/web)" }),
+  );
+  server.on("error", (e: NodeJS.ErrnoException) => {
+    log.error("http server could not start", { host: config.httpHost, port: config.httpPort, error: e.code ?? e.message });
+    process.exit(1);
+  });
 
   await bot.init();
   await bot.api.setMyCommands(COMMANDS).catch((e) => log.warn("could not set the command menu", { error: (e as Error).message }));
