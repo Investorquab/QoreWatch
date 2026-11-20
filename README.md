@@ -4,7 +4,7 @@
 
 Built for the QoreChain *Build Before Q-Day* Developer Fest, Quantum Pass track. Live on QoreChain testnet (`qorechain-diana`).
 
-**Start it: [t.me/qorewatchbot](https://t.me/qorewatchbot)**
+**Start it: [t.me/qorewatchbot](https://t.me/qorewatchbot)** · **Website: [qorewatch.185-7-81-139.sslip.io](https://qorewatch.185-7-81-139.sslip.io/)**
 
 ![QoreWatch landing page](docs/screenshots/landing.jpg)
 
