@@ -85,10 +85,13 @@ elif ! grep -q '^import conf.d/\*\.caddy' /etc/caddy/Caddyfile; then
   cp -a /etc/caddy/Caddyfile "/etc/caddy/Caddyfile.bak-$(date +%Y%m%d%H%M%S)"
   printf '\n# QoreWatch\nimport conf.d/*.caddy\n' >> /etc/caddy/Caddyfile
 fi
-install -d -m 755 -o caddy -g caddy /var/log/caddy
-caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null 2>&1 || { caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile; die "the Caddy configuration is not valid"; }
+# Validate as the caddy user, so nothing it creates is owned by root.
+runuser -u caddy -- caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null 2>&1 \
+  || { runuser -u caddy -- caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile; die "the Caddy configuration is not valid"; }
 systemctl enable caddy >/dev/null 2>&1
-systemctl reload caddy 2>/dev/null || systemctl restart caddy
+if systemctl is-active --quiet caddy; then systemctl reload caddy; else systemctl restart caddy; fi
+sleep 2
+systemctl is-active --quiet caddy || { journalctl -u caddy -n 20 --no-pager >&2; die "Caddy is not running after the change (log above)"; }
 
 say "done. Next: server-release.sh with the release archive (and --env the first time)."
 [[ -f "$QW_ETC/bot.env" ]] || warn "$QW_ETC/bot.env does not exist yet: pass --env to server-release.sh"

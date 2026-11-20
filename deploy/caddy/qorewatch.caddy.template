@@ -1,5 +1,6 @@
-# QoreWatch site for Caddy (2.5 or newer). server-setup.sh writes it to /etc/caddy/conf.d/qorewatch.caddy
-# with __DOMAIN__ replaced. Caddy gets and renews the HTTPS certificate by itself.
+# QoreWatch site for Caddy (2.5 or newer). server-setup.sh writes this to /etc/caddy/conf.d/qorewatch.caddy
+# with the domain filled in. Caddy gets and renews the HTTPS certificate by itself. No access log is
+# written to disk (visitors' addresses stay out of files); Caddy's own messages go to the journal.
 __DOMAIN__ {
 	__TLS__
 	encode zstd gzip
@@ -10,10 +11,4 @@ __DOMAIN__ {
 	# Caddy sets X-Forwarded-For to the real client address and drops one sent by the client,
 	# so the bot's per-address rate limit cannot be dodged with a forged header.
 	reverse_proxy 127.0.0.1:8787
-	log {
-		output file /var/log/caddy/qorewatch.log {
-			roll_size 10MiB
-			roll_keep 5
-		}
-	}
 }
