@@ -1,0 +1,145 @@
+# QoreWatch security audit
+
+An internal audit: we tried to break QoreWatch and wrote down what happened. Every result below was run against the code in this repository and, where noted, against the live QoreChain testnet (`qorechain-diana`) with the real QoreX 0.4.3 extension, or on a fresh Ubuntu 24.04 server. When something failed we fixed it and ran it again. The tables show the final state; **Findings** keeps the failures.
+
+It is not a third-party audit. Known gaps are under **Limitations**.
+
+| | |
+| --- | --- |
+| Date | 20 November 2026 |
+| Commit audited | the commit that adds this file |
+| Contract | `QoreWatchAttest` at `0x52f29cb4f18ec44acbb997b94c0776e4e35ed273` (testnet, block 10389715) |
+| Wallet | QoreX 0.4.3 browser extension, testnet |
+| Automated tests | 148, all passing: 54 core, 81 bot, 6 web, 7 Foundry |
+
+## Summary
+
+| Area | Checks | Result | Notes |
+| --- | --- | --- | --- |
+| Alerts on the live chain | 30 steps | 30 pass, 0 warnings | Every alert family from a real transaction, plus the copied-code attack |
+| Pages with the real QoreX | 6 | 6 pass | Link, three revokes, window close by the guided steps, attest |
+| Wallet linking | 4 attacks | all refused | Classical-only, failed, replayed and copied codes; **F-1** found and fixed here |
+| Telegram side | tests | pass | Group admin rules, `/forget`, escaping of everything a sender controls |
+| Web pages and API | tests + live browser | pass | CSP and headers, rate limit, escaping, zero console errors under the CSP |
+| Deployment | 24 server checks | 24 pass | Fresh Ubuntu 24.04: install, alert, rollback, reboot, restore, upgrade; **F-2** found here |
+| Secrets in the repository | 209 tracked files | none | Only the fake token of the test Bot API stand-in |
+
+Six findings, all fixed. None let anyone move funds, read anything private or silence a critical alert.
+
+## Threat model
+
+QoreWatch is an alert service, so its promises are about **truth** and **reach**, never custody:
+
+1. **It never holds a key.** It cannot sign, so it cannot move anything. Linking and every fix are transactions the user approves in QoreX.
+2. **A linked address is really yours.** "Your account" alerts, "was this you?" questions and `/attest` only apply to an address proved with a transaction signed with its ML-DSA-87 key.
+3. **Alerts are accurate and critical ones always arrive.** A key change cannot be muted, paused or held by quiet hours.
+4. **Nobody else can change what your chat watches.** In groups, only admins can.
+5. **Its pages cannot be used against you.** They hold no state, run only their own scripts, and every transaction is built from explicit parameters that QoreX shows before signing.
+6. **The server exposes as little as possible.** The bot listens on localhost only, runs unprivileged, and its token is readable by root only.
+
+The headline attacker sees the public chain (including pending transactions), can send Telegram messages and HTTP requests, and may hold a classical key, the one a quantum computer could derive.
+
+## 1. Alerts on the live chain
+
+`apps/bot/scripts/live-scenario.ts` runs the production bot (`dist/main.js`) against the real testnet with a local stand-in for the Telegram API, and checks every message it sends. Final run, 20 November 2026, block 10422256: **30 of 30**, no warning or error in the bot's log.
+
+| Step | Alert or check |
+| --- | --- |
+| 1-4 | `/link` code; the page's claim; **a copied code in someone else's real transaction links nobody**; the owner's hybrid-signed self-send links |
+| 5-6 | read-only watches with labels |
+| 7-8 | money in (0.5 QOR with its note) and out |
+| 9-10 | EVM window opened to any recipient; a value transfer inside it |
+| 11-12 | unlimited fUSD approval (warning with a revoke link); approval revoked |
+| 13 | failed transaction from the account |
+| 14-15 | `/attest` page; attestation recorded and matched against the issued report |
+| 16-19 | authz grant and revoke; fee allowance grant and revoke |
+| 20 | EVM delegation consent |
+| 21-22 | staked; unstaking started |
+| 23 | window closed |
+| 24-28 | a never-used account checks as unused; funded; its post-quantum key registration alerted with **no classical-only false alarm**; then quantum-ready |
+| 29-30 | `/history` and `/check` of the linked wallet (and the bot's health in sync at the end) |
+
+The copied-code step used bravo's real transaction `CDFCF47ED162CA148564FA58B2E72350294993FC6918997454054C658AE4328C`, which carried alpha's pending code and landed on chain. The code stayed pending and no message was sent.
+
+## 2. Pages with the real QoreX extension
+
+`apps/bot/scripts/qorex-e2e.ts` drives Chromium with the unpacked QoreX 0.4.3 extension, on the production bot. All six pass:
+
+| Page | What QoreX showed and signed | Confirmed by |
+| --- | --- | --- |
+| Link | MsgSend 1 uqor to yourself, memo `QoreWatch link <code>`, hybrid signature | the bot's "Wallet linked" |
+| Revoke a permission | `/cosmos.authz.v1beta1.MsgRevoke`, grantee and message type | the grant is gone on chain |
+| Revoke a fee allowance | `/cosmos.feegrant.v1beta1.MsgRevokeAllowance`, grantee | the allowance is gone |
+| Revoke a token approval | `approve(spender, 0)` on fUSD, inside QoreX's own window | allowance 0 |
+| Close a window | the page's three steps followed in QoreX's own screens | the window is closed on chain |
+| Attest | `attest(score, reportHash, code)` on `QoreWatchAttest` | the bot's "matches the report" |
+
+QoreX cannot decode the attest call ("Unknown contract call 0xf1dad6b6… QoreX cannot read what it does"). The page therefore shows the score, the report fingerprint and the contract address before the user signs.
+
+## 3. Wallet linking
+
+| Attempt | Result | Evidence |
+| --- | --- | --- |
+| Link with a classical-only signature | refused (`not_hybrid`) | `test/bot.test.ts` |
+| Link with a failed transaction | refused (`failed_tx`) | `test/bot.test.ts` |
+| Reuse a code that already linked | refused (single use) | `test/bot.test.ts`, `test/store.test.ts` |
+| Expired code, or an attest code used to link | refused | `test/store.test.ts` |
+| Copy a pending code into another account's transaction | refused (**F-1**) | `test/store.test.ts`, `test/watcher.test.ts`, live step 3 |
+| Claim a code for a second address | `409`; the first claim stands | `test/server.test.ts`, live on the deployed server |
+| Claim with a non-address | `400` | `test/server.test.ts` |
+
+## 4. Telegram side
+
+- **Group admin rules.** Only group admins can change a group's watches, settings or links (`lets only admins change a group's watches`).
+- **Forgetting.** `/forget` deletes everything about a chat after confirmation, and removing the bot from a group forgets the group (`forgets a group when the bot is removed`, `forgets a chat completely`).
+- **Hostile text.** Memos, labels, token names and handles are sender-controlled and end up in HTML messages. They are escaped everywhere (`escapes anything a sender controls`, `escapes everything that reaches the page`).
+- **Critical alerts get through.** Pause, chat mutes, address mutes and thresholds never stop a critical alert (`respects pause, chat mutes, address mutes and money thresholds, but never for critical alerts`). Quiet hours hold info alerts only.
+- **Handles.** A QoreX `@handle` is used only after both the owner's secp256k1 and the registry's Ed25519 signatures verify (`verifies a real record from the QoreX handle registry`, `refuses lies`).
+- **Telegram limits.** The bot backs off on Telegram's rate limit and stops sending to chats that blocked it.
+
+## 5. Web pages and API
+
+- **Headers:** a Content Security Policy that allows scripts from the site only (no inline scripts), `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy: no-referrer` and a restrictive `Permissions-Policy`, plus HSTS from Caddy. Tested in `sets security headers` and checked on the deployed server.
+- **Under the CSP**, the landing page, a check page and the link page loaded in Chromium through the production server with zero console errors or warnings.
+- **Parameters stay out of logs.** Fix and link pages take their parameters in the URL fragment (`#…`), which browsers do not send to the server.
+- **Rate limit:** 120 requests a minute per client on the API (`rate-limits each client`). Behind Caddy, the client address is the one Caddy sets; Caddy drops a forged `X-Forwarded-For`.
+- **Read-only:** the only write endpoint is the link claim, which can only bind an unclaimed, unexpired link code.
+
+## 6. Deployment
+
+On a fresh Ubuntu 24.04 server (systemd, SSH), following [deploy/README.md](deploy/README.md) exactly:
+
+| Check | Result |
+| --- | --- |
+| `ship.sh` over SSH | only committed files travel (`git archive`); the `.env` lands mode 600 |
+| Setup and first release | Node 22 and Caddy installed; healthy and in sync with the chain |
+| `verify.sh` | 24 of 24: unprivileged user, root-only 600 secrets, no `.env` or `private/` in the release, port 8787 on 127.0.0.1 only, every page over HTTPS, security headers, HTTP to HTTPS redirect, database, backup |
+| A real alert through the deployed bot | 0.01 QOR with the note "VPS deploy test" reported within seconds |
+| Broken release | backed up, failed to start, rolled back automatically |
+| Reboot | everything came back by itself |
+| Restore and upgrade | restore from backup worked; the schema migration upgraded the live database in place |
+
+The systemd unit gives the bot no capabilities, a read-only system, a private `/tmp` and devices, and write access only to `/var/lib/qorewatch`. systemd reads the token file for it.
+
+## Findings
+
+| | Severity | Finding | Fix |
+| --- | --- | --- | --- |
+| **F-1** | Medium | **A pending link code could be copied.** QoreChain's public RPC shows pending transactions. Someone watching it could put your link code into their own hybrid-signed transaction and get it into a block first. Your chat would then call their address "My wallet": its alerts would read as yours, and your link would fail. No funds or data were at risk. | The link page claims the code for the address QoreX connected before it signs; the bot links only that signer (`3455d9d`). Verified live with a real copied-code transaction. |
+| **F-2** | Medium (availability) | **Caddy could not start after setup.** `caddy validate` ran as root and created the access-log file owned by root, so Caddy's own user could not open it. Setup still reported success. Found on the fresh-server test. | No access-log file (visitor addresses also stay off disk); validation runs as the caddy user; setup fails loudly if Caddy is not running (`d0c27ee`). |
+| **F-3** | Low (test integrity) | **The QoreX test harness could pass silently.** A setup transaction that failed ended the run with exit code 0 and "2/2". | Harness errors are recorded as failures; leftover state from an interrupted run is reused; a failing step saves a screenshot (`1c7cc84`). |
+| **F-4** | Low | **Slight bias in code characters.** `byte % 31` made some characters a little more likely. | Rejection sampling, with a distribution test (`3455d9d`). |
+| **F-5** | Low (operations) | **A busy port crashed the bot with an unhandled error** after logging "listening". | The listening line waits for the port; a busy port exits with a clear message (`73cead9`). |
+| **F-6** | Low (accuracy) | **False "classical-only signature" warning on key registration.** A key registration is classical-only by necessity. | Not flagged when the same transaction registers a post-quantum key (`8138100`); covered by a test and live step 27. |
+
+Earlier, during the build, live testing also corrected the window-fix steps to match QoreX's real screens (`a310e6f`) and flagged dust-liquidity pools as thin instead of showing absurd prices (`7d013c0`).
+
+## Limitations
+
+- **Not a third-party audit,** and testnet only.
+- **What never reaches a block is invisible.** QoreChain refuses some transactions at the door (for example a classical-only signature on a protected account). That refusal is the protection working, but no bot can report it.
+- **A watcher outage longer than the catch-up limit** (`MAX_CATCHUP_BLOCKS`, about 70 minutes by default) skips the oldest blocks rather than replaying days. `/status` and `/healthz` show the lag.
+- **`/healthz` is public.** It shows the block height and the last chain error, never a secret.
+- **The rate limit is in memory** and per process, which suits one server.
+- **QoreWatch trusts the public QoreChain endpoints** it reads (or the ones set in `QORE_*_URL`). A lying node could fake or hide alerts; running your own node removes that trust.
+- **The attest call is opaque in QoreX,** so users rely on the page's summary of what they sign. The contract only records data from the signer's own account and holds no funds.
