@@ -1,0 +1,6 @@
+/* Self-hosted faces for the landing page (the CSP allows fonts from this origin). */
+@import "@fontsource/gabarito/400.css";
+@import "@fontsource/gabarito/600.css";
+@import "@fontsource-variable/figtree";
+@import "@fontsource/dm-mono/400.css";
+@import "@fontsource/dm-mono/500.css";
