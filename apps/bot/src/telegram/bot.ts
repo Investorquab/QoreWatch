@@ -189,9 +189,9 @@ export function createBot(deps: BotDeps): { bot: Bot; messenger: Messenger } {
   async function startLink(ctx: Context) {
     if (!(await canEdit(ctx))) return;
     const code = store.createCode(ctx.chat!.id, "link");
-    await reply(ctx, {
+    const view: View = {
       html: [
-        "🔗 <b>Link your wallet</b>",
+        isGroup(ctx) ? `🔗 <b>Link a wallet to ${esc(("title" in ctx.chat! ? ctx.chat.title : undefined) ?? "your group")}</b>` : "🔗 <b>Link your wallet</b>",
         "",
         "1. Open the link page on the computer where QoreX is installed, and connect QoreX there.",
         "2. Approve one tiny transaction to yourself (1 uqor, plus the network fee). Its note carries your code:",
@@ -201,7 +201,16 @@ export function createBot(deps: BotDeps): { bot: Bot; messenger: Messenger } {
         "QoreX signs it with your post-quantum key, which proves the address is yours. I never see or need a key. The code works once, for 15 minutes, and only for the address you connect on the page.",
       ].join("\n"),
       buttons: [[{ text: "Open the link page", url: pages(config.publicUrl).link(code) }]],
-    });
+    };
+    if (!isGroup(ctx)) return void (await reply(ctx, view));
+    // In a group every member would see the code and could claim it first with their own address:
+    // the code goes to the admin who asked, in a private chat, and only there.
+    const dm = await messenger.send(ctx.from!.id, view.html, view.buttons);
+    await ctx.reply(
+      dm.ok
+        ? "🔗 I sent you the link code in a private chat. Codes are never posted in groups, so nobody else here can use it."
+        : "🔗 I can't message you privately yet. Open a chat with me, press Start, then send /link here again. Codes are never posted in groups.",
+    );
   }
   bot.command("link", startLink);
 
