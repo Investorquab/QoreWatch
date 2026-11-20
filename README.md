@@ -26,14 +26,16 @@ Built for the QoreChain *Build Before Q-Day* Developer Fest, Quantum Pass track.
 3. [How linking works](#how-linking-works)
 4. [Account check and fixes](#account-check-and-fixes)
 5. [Commands](#commands)
-6. [Architecture](#architecture)
-7. [Security and privacy](#security-and-privacy)
-8. [Run it locally](#run-it-locally)
-9. [Deploy](#deploy)
-10. [Add an alert](#add-an-alert)
-11. [Repository layout](#repository-layout)
-12. [Limitations](#limitations)
-13. [Credits and licence](#credits-and-licence)
+6. [Quantum Pass requirements](#quantum-pass-requirements)
+7. [Architecture](#architecture)
+8. [Security and privacy](#security-and-privacy)
+9. [Run it locally](#run-it-locally)
+10. [Deploy](#deploy)
+11. [Add an alert](#add-an-alert)
+12. [Testnet addresses](#testnet-addresses)
+13. [Repository layout](#repository-layout)
+14. [Limitations](#limitations)
+15. [Credits and licence](#credits-and-licence)
 
 ---
 
@@ -149,6 +151,19 @@ Fixes open from the alert's button:
 | `/status` | is QoreWatch in sync with the chain |
 | `/privacy` `/forget` | what is stored, and delete all of it |
 
+## Quantum Pass requirements
+
+Built for the Quantum Pass track ("a small original QoreChain app, tool, game or bot"; a Telegram bot is one of its examples). Each requirement, and where to check it:
+
+| Requirement | How QoreWatch meets it | Where to check |
+| --- | --- | --- |
+| **Use create-qorechain-dapp** | The contracts workspace was scaffolded from its Foundry template, and its EVM window helper (`pnpm window`) registered the deployer's ML-DSA-87 key and opened the window for the deploy. | Commit `d71ca3b` ("Scaffold contracts from create-qorechain-dapp's foundry template"); [`contracts/README.md`](contracts/README.md); `contracts/scripts/window.ts`, `contracts/foundry.toml` |
+| **Connect QoreX** | The link, revoke, attest and guided-fix pages connect QoreX and ask it to sign: a hybrid-signed self-send to link, `MsgRevoke`, `MsgRevokeAllowance`, `approve(spender, 0)` and the attest call. Tested with the real QoreX 0.4.3 extension: 6 of 6 pages. | [`apps/web/src/qorex.ts`](apps/web/src/qorex.ts), [`apps/web/src/pages/`](apps/web/src/pages/); [audit.md](audit.md), section 2 |
+| **Deploy on testnet** | `QoreWatchAttest` is deployed on `qorechain-diana`, and the bot and its pages run live on a VPS. | `0x52f29cb4f18ec44acbb997b94c0776e4e35ed273`, block 10389715, deploy tx `0x14a8b49efa151586fd80ee234ceb3e981673c97679a3b6e3b7c97dd2b6967400`; [qorewatch.185-7-81-139.sslip.io](https://qorewatch.185-7-81-139.sslip.io/), [t.me/qorewatchbot](https://t.me/qorewatchbot) |
+| **Complete a hybrid-signed transaction** | Linking requires one (QoreWatch rejects a classical-only link), and every native transaction of the live tests is hybrid secp256k1 + ML-DSA-87. | Deploy window `FE119A8198DF0203A457FAA87E42570C982A9283070F07A96759603C8B6CC710`; transfer `5D5A5ACD1E7C89936A88F941BD385C62910512F54374FE08ADBF6A0B4210C49A` (block 10437560); EVM window `DB6BB883674962B3C0531A3B5DB187B20EA0DE3A727B73EEF609640B79A8CB9A` (block 10437562) |
+
+The submission checks are also covered: MIT [LICENSE](LICENSE), this README, the [testnet addresses](#testnet-addresses), the demo video (linked on the project page), and credits for every template, kit and library under [Credits and licence](#credits-and-licence).
+
 ## Architecture
 
 One Node process runs the Telegram bot, the chain watcher, scheduled jobs and a small HTTP server for the web pages. State is one SQLite file.
@@ -241,6 +256,18 @@ Alerts are detectors: small functions that look at one transaction (or one EVM l
 3. Add a test in `apps/bot/test/detectors.test.ts`, ideally against a real transaction recorded with `packages/core/scripts/record-fixtures.mjs`.
 
 Delivery, thresholds, muting, quiet hours and de-duplication apply by themselves. Scheduled checks (time-based alerts) go in `apps/bot/src/watcher/jobs.ts`, and new commands in `apps/bot/src/telegram/bot.ts`.
+
+## Testnet addresses
+
+All on QoreChain testnet `qorechain-diana` (EVM chain 9800). Explorer: [explore.qore.network](https://explore.qore.network) (choose Testnet).
+
+| What | Address |
+| --- | --- |
+| `QoreWatchAttest` contract | `0x52f29cb4f18ec44acbb997b94c0776e4e35ed273` / `qor12tefed833mzy4jaej7u5cpmkun34a5nnsr0a9v` (block 10389715) |
+| Test wallet "alpha" (linked wallet in the tests; deployed the contract) | `qor1ukeppmkglj3d36ucej3rsntt0yx9lvhu83egha` / `0xe5B210Eec8FcA2D8eB98ccA2384D6B790C5fB2FC` |
+| Test wallet "bravo" (second wallet: transfers, permissions) | `qor1sx6dpevcmw8464tr76dsehsdvj7euy4rknm23c` / `0x81B4D0e598dB8F5d5563F69B0cde0D64bD9E12a3` |
+| Alpha's second account (key registered through the fix-key page) | `qor1kdlczz5mwkamhwnhsur8mfwhqy3t66vqhgzt6r` |
+| A never-used account from the live run (key registration with proof of possession) | `qor1w822n4h5lr3y8ujmqlkt8gctnfgypzk77d95yk` |
 
 ## Repository layout
 
