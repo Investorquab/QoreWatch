@@ -1,0 +1,10 @@
+[Unit]
+Description=Back up QoreWatch's database every day
+
+[Timer]
+OnCalendar=*-*-* 03:17:00
+RandomizedDelaySec=15m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

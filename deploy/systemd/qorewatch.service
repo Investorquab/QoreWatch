@@ -1,0 +1,49 @@
+# QoreWatch: the Telegram bot, the chain watcher and the web pages, in one Node process.
+# Installed to /etc/systemd/system/ by deploy/scripts/server-setup.sh.
+[Unit]
+Description=QoreWatch (Telegram alerts for QoreChain wallets)
+Documentation=https://github.com/Investorquab/QoreWatch/tree/dev/deploy
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=qorewatch
+Group=qorewatch
+WorkingDirectory=/opt/qorewatch/current/apps/bot
+# Secrets and settings: the operator's .env, readable by root only (systemd reads it, the bot gets the values).
+EnvironmentFile=/etc/qorewatch/bot.env
+# Fixed paths for this server layout. Loaded second, so they win over the same keys in bot.env.
+EnvironmentFile=/etc/qorewatch/runtime.env
+ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning dist/main.js
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+# Config errors exit with 2: do not restart in a loop on a bad .env.
+RestartPreventExitStatus=2
+
+# Hardening: the process can write only to its data folder.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/qorewatch
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

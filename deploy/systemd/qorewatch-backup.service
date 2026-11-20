@@ -1,0 +1,15 @@
+# A consistent copy of QoreWatch's SQLite database, made while the bot runs.
+[Unit]
+Description=QoreWatch database backup
+
+[Service]
+Type=oneshot
+User=qorewatch
+Group=qorewatch
+ExecStart=/opt/qorewatch/current/deploy/scripts/backup.sh
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/qorewatch
+PrivateTmp=yes
+UMask=0077
