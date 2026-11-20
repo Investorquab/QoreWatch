@@ -15,12 +15,18 @@ WorkingDirectory=/opt/qorewatch/current/apps/bot
 EnvironmentFile=/etc/qorewatch/bot.env
 # Fixed paths for this server layout. Loaded second, so they win over the same keys in bot.env.
 EnvironmentFile=/etc/qorewatch/runtime.env
-ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning dist/main.js
+# /opt/qorewatch/bin/node links to the system node (22.13+) or to a private Node 22 (server-setup.sh).
+ExecStart=/opt/qorewatch/bin/node --disable-warning=ExperimentalWarning dist/main.js
 Restart=on-failure
 RestartSec=5
 TimeoutStopSec=20
 # Config errors exit with 2: do not restart in a loop on a bad .env.
 RestartPreventExitStatus=2
+
+# Shared servers: stay a good neighbour. The bot normally uses about 100-200 MB.
+MemoryHigh=400M
+MemoryMax=700M
+CPUWeight=50
 
 # Hardening: the process can write only to its data folder.
 NoNewPrivileges=yes

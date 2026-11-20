@@ -9,7 +9,9 @@ OUT_DIR="$DATA/backups"
 [[ -f "$DB" ]] || { echo "no database at $DB yet; nothing to back up"; exit 0; }
 mkdir -p "$OUT_DIR"
 OUT="$OUT_DIR/qorewatch-$(date -u +%Y%m%dT%H%M%SZ)${1:+-$1}.sqlite"
-node --disable-warning=ExperimentalWarning -e '
+NODE=/opt/qorewatch/bin/node
+[[ -x "$NODE" ]] || NODE="$(command -v node)"
+"$NODE" --disable-warning=ExperimentalWarning -e '
   const { DatabaseSync } = require("node:sqlite");
   const [db, out] = process.argv.slice(1);
   const d = new DatabaseSync(db, { readOnly: true });

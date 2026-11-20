@@ -10,5 +10,5 @@ __DOMAIN__ {
 	}
 	# Caddy sets X-Forwarded-For to the real client address and drops one sent by the client,
 	# so the bot's per-address rate limit cannot be dodged with a forged header.
-	reverse_proxy 127.0.0.1:8787
+	reverse_proxy 127.0.0.1:__PORT__
 }

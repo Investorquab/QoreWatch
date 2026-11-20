@@ -17,6 +17,7 @@ chk "qorewatch.service is running" systemctl is-active qorewatch
 chk "qorewatch.service starts at boot" systemctl is-enabled qorewatch
 chk "the daily backup timer is on" systemctl is-enabled qorewatch-backup.timer
 chk "Caddy is running" systemctl is-active caddy
+chk "QoreWatch's node is $NODE_MIN or newer ($("$QW_BIN/node" -v 2>/dev/null))" node_ok
 chk "runs as the unprivileged qorewatch user" bash -c '[[ "$(ps -o user= -p "$(systemctl show -p MainPID --value qorewatch)")" == qorewatch ]]'
 echo " secrets"
 chk "bot.env exists, root only, mode 600" bash -c "[[ \"\$(stat -c '%U:%G %a' $QW_ETC/bot.env)\" == 'root:root 600' ]]"
