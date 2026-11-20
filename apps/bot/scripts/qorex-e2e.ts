@@ -111,10 +111,27 @@ own.add(unl);
 await unl.goto(`chrome-extension://${extId}/popup.html`);
 await unl.waitForTimeout(2000);
 await unlock(unl);
+// Make alpha's first Ethereum account the active one (another test may have left a different one in use).
+await unl.getByRole("button", { name: /Your accounts/i }).first().click();
+await unl.waitForTimeout(1500);
+const use = unl.getByRole("button", { name: "Use Ethereum account", exact: true });
+if (await use.count()) {
+  await use.click();
+  await unl.waitForTimeout(2000);
+}
+if (!(await unl.innerText("body")).includes(alpha.cosmos.slice(0, 12))) {
+  await unl.goto(`chrome-extension://${extId}/popup.html`);
+  await unl.waitForTimeout(2000);
+}
+const active = (await unl.innerText("body")).replace(/\s+/g, " ");
+if (!active.includes(alpha.cosmos.slice(0, 12))) throw new Error(`QoreX is not on alpha's account: ${active.slice(0, 160)}`);
 await unl.close();
 
 const results: { step: string; pass: boolean; detail?: string }[] = [];
+const ONLY = process.env.QX_ONLY ? new RegExp(process.env.QX_ONLY) : undefined;
+const wants = (name: string) => !ONLY || ONLY.test(name);
 async function step(name: string, fn: () => Promise<string | boolean>) {
+  if (ONLY && !ONLY.test(name)) return;
   try {
     const r = await fn();
     results.push({ step: name, pass: r === true || (typeof r === "string" && r.length > 0), ...(typeof r === "string" ? { detail: r.slice(0, 160) } : {}) });
@@ -128,8 +145,13 @@ async function onPage(url: string, name: string, act: (p: import("playwright").P
   own.add(p);
   await p.goto(url);
   await p.waitForTimeout(2500);
-  await act(p);
-  await p.waitForFunction((src) => new RegExp(src).test(document.body.innerText), done.source, { timeout: timeoutMs });
+  try {
+    await act(p);
+    await p.waitForFunction((src) => new RegExp(src).test(document.body.innerText), done.source, { timeout: timeoutMs });
+  } catch (e) {
+    await p.screenshot({ path: join(OUT, `qx-${name}-failed.png`), fullPage: true }).catch(() => undefined);
+    throw e;
+  }
   await p.screenshot({ path: join(OUT, `qx-${name}.png`), fullPage: true });
   const t = (await p.innerText("body")).replace(/\s+/g, " ");
   await p.close();
@@ -156,7 +178,7 @@ try {
   });
 
   const authz = { typeUrl: "/cosmos.authz.v1beta1.GenericAuthorization", value: GenericAuthorization.encode({ msg: "/cosmos.bank.v1beta1.MsgSend" }).finish() };
-  await native(alpha, [msg.authz.grant({ granter: alpha.cosmos, grantee: bravo.cosmos, grant: { authorization: authz, expiration: { seconds: BigInt(Math.floor(Date.now() / 1000) + 86400), nanos: 0 } } })]);
+  if (wants("fix/authz")) await native(alpha, [msg.authz.grant({ granter: alpha.cosmos, grantee: bravo.cosmos, grant: { authorization: authz, expiration: { seconds: BigInt(Math.floor(Date.now() / 1000) + 86400), nanos: 0 } } })]);
   await step("fix/authz page: one-tap revoke through QoreX", () =>
     onPage(`${base}/fix/authz#${new URLSearchParams({ granter: alpha.cosmos, grantee: bravo.cosmos, msg: "/cosmos.bank.v1beta1.MsgSend" })}`, "fix-authz", async (p) => {
       await clickConnect(p);
@@ -165,7 +187,10 @@ try {
   );
 
   const allowance = { typeUrl: "/cosmos.feegrant.v1beta1.BasicAllowance", value: BasicAllowance.encode({ spendLimit: [{ denom: "uqor", amount: "1000000" }] }).finish() };
-  await native(alpha, [msg.feegrant.grant({ granter: alpha.cosmos, grantee: bravo.cosmos, allowance })]);
+  const windowLive = async () => ((await (await fetch(`https://api-testnet.qore.host/qorechain/pqc/v1/evm_window/${alpha.cosmos}`)).json()) as { live?: boolean }).live === true;
+  // An allowance left by an earlier, interrupted run is reused: granting twice is refused by the chain.
+  const hasAllowance = async () => (await fetch(`https://api-testnet.qore.host/cosmos/feegrant/v1beta1/allowance/${alpha.cosmos}/${bravo.cosmos}`)).ok;
+  if (wants("fix/feegrant") && !(await hasAllowance())) await native(alpha, [msg.feegrant.grant({ granter: alpha.cosmos, grantee: bravo.cosmos, allowance })]);
   await step("fix/feegrant page: one-tap revoke through QoreX", () =>
     onPage(`${base}/fix/feegrant#${new URLSearchParams({ granter: alpha.cosmos, grantee: bravo.cosmos })}`, "fix-feegrant", async (p) => {
       await clickConnect(p);
@@ -173,9 +198,12 @@ try {
     }, /Revoked\./),
   );
 
-  await native(alpha, [openEvmWindowMsg({ sender: alpha.cosmos, blocks: 300n, maxTxs: 2n, maxValue: 1_000_000n })]);
-  await evmTx(alpha, FUSD, encodeFunctionData({ abi: parseAbi(["function approve(address,uint256)"]), functionName: "approve", args: [bravo.evm as Hex, 2n ** 256n - 1n] }));
-  await native(alpha, [closeEvmWindowMsg(alpha.cosmos)]);
+  if (wants("fix/approval")) {
+    if (await windowLive()) await native(alpha, [closeEvmWindowMsg(alpha.cosmos)]);
+    await native(alpha, [openEvmWindowMsg({ sender: alpha.cosmos, blocks: 300n, maxTxs: 2n, maxValue: 1_000_000n })]);
+    await evmTx(alpha, FUSD, encodeFunctionData({ abi: parseAbi(["function approve(address,uint256)"]), functionName: "approve", args: [bravo.evm as Hex, 2n ** 256n - 1n] }));
+    await native(alpha, [closeEvmWindowMsg(alpha.cosmos)]);
+  }
   await step("fix/approval page: set the approval to 0 through QoreX (QoreX opens its own window)", () =>
     onPage(`${base}/fix/approval#${new URLSearchParams({ owner: alpha.evm.toLowerCase(), token: FUSD.toLowerCase(), spender: bravo.evm.toLowerCase() })}`, "fix-approval", async (p) => {
       await clickConnect(p);
@@ -198,7 +226,7 @@ try {
   }
 
   // The window fix is done in QoreX itself: follow the page's three steps literally.
-  await native(alpha, [openEvmWindowMsg({ sender: alpha.cosmos, blocks: 600n, maxTxs: 3n, maxValue: 1_000_000n })]);
+  if (wants("fix/window") && !(await windowLive())) await native(alpha, [openEvmWindowMsg({ sender: alpha.cosmos, blocks: 600n, maxTxs: 3n, maxValue: 1_000_000n })]);
   await step("fix/window page: close the window in QoreX by following the page's steps", async () => {
     const page = await ctx.newPage();
     own.add(page);
@@ -224,6 +252,10 @@ try {
     await page.screenshot({ path: join(OUT, "qx-fix-window.png"), fullPage: true });
     return "Window closed.";
   });
+} catch (e) {
+  // A setup transaction or the harness itself failed: that is a failed run, never a silent pass.
+  results.push({ step: "harness", pass: false, detail: (e as Error).message.slice(0, 300) });
+  console.log(`FAIL harness — ${(e as Error).message.slice(0, 300)}`);
 } finally {
   writeFileSync(join(OUT, "qx-prompts.json"), JSON.stringify(prompts, null, 1));
   await ctx.close();

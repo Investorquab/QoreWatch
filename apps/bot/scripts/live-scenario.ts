@@ -41,7 +41,9 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const keys = JSON.parse(readFileSync(process.env.QW_KEYS!, "utf8")) as Record<"alpha" | "bravo" | "fresh", { mnemonic: string }>;
 const alpha = await deriveUnifiedAccount(keys.alpha.mnemonic, 0);
 const bravo = await deriveUnifiedAccount(keys.bravo.mnemonic, 0);
-const fresh = await deriveUnifiedAccount(keys.fresh.mnemonic, 0);
+// "Fresh" must be an account that has never been used, so each run takes a new index of the same test mnemonic.
+const freshIndex = Number(process.env.FRESH_INDEX ?? 2 + (Math.floor(Date.now() / 60_000) % 1_000_000));
+const fresh = await deriveUnifiedAccount(keys.fresh.mnemonic, freshIndex);
 
 // ---- chain actions ---------------------------------------------------------------------------------------------
 async function seq(address: string) {
@@ -135,6 +137,22 @@ try {
   say("/link");
   const linkMsg = await expectMsg("/link gives a one-time code", /QoreWatch link ([A-Z0-9]{8})/, from, 20_000);
   const code = /QoreWatch link ([A-HJ-NP-Z2-9]{8})/.exec(linkMsg ?? "")?.[1];
+  // The link page claims the code for the address QoreX connected, before it signs.
+  const claim = await fetch(`http://127.0.0.1:${port}/api/link/${code}/claim`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ address: alpha.cosmos }) });
+  results.push({ step: "link page claims the code for the connected address", pass: claim.ok, detail: `${claim.status} ${await claim.text()}` });
+  // Attack: someone copies the pending code into their own hybrid-signed transaction. It must not link them.
+  const before = msgs().length;
+  let copied = "";
+  try {
+    copied = await native(bravo, [msg.bank.send({ fromAddress: bravo.cosmos, toAddress: bravo.cosmos, amount: [{ denom: "uqor", amount: "1" }] })], `QoreWatch link ${code}`);
+    await sleep(6000);
+  } catch (e) {
+    copied = `failed: ${(e as Error).message.slice(0, 80)}`;
+  }
+  const stolen = msgs().slice(before).some((m) => /Wallet linked/.test(m));
+  const st = (await (await fetch(`http://127.0.0.1:${port}/api/link/${code}`)).json()) as { status: string };
+  results.push({ step: "a copied code in someone else's transaction links nobody", pass: !stolen && st.status === "pending" && /^[0-9A-F]{64}$/.test(copied), detail: `bravo tx ${copied}; code still ${st.status}` });
+  console.log(`${!stolen && st.status === "pending" ? "PASS" : "FAIL"} a copied code in someone else's transaction links nobody`);
   await act("link: hybrid-signed self-send carrying the code links the wallet", () => native(alpha, [msg.bank.send({ fromAddress: alpha.cosmos, toAddress: alpha.cosmos, amount: [{ denom: "uqor", amount: "1" }] })], `QoreWatch link ${code}`), /Wallet linked/);
   from = msgs().length;
   say(`/watch ${bravo.cosmos} Bravo`);
