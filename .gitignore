@@ -36,3 +36,7 @@ playwright-report/
 .vercel/
 .DS_Store
 contracts/lib/
+
+# Local Claude Code instructions and permissions (deploy handoff), never committed
+CLAUDE.local.md
+.claude/settings.local.json
