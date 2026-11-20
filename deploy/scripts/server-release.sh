@@ -97,8 +97,9 @@ if ! started; then
   if [[ -n "$PREV" && -d "$PREV" ]]; then
     warn "rolling back to $(basename "$PREV")"
     switch_to "$PREV"; systemctl restart qorewatch
-    started && warn "rolled back; the previous release is running" || warn "the previous release did not come up either"
+    if started; then warn "rolled back; the previous release is running"; else warn "the previous release did not come up either"; fi
   fi
+  [[ "$(readlink -f "$QW_ROOT/current")" == "$DEST" ]] || rm -rf "$DEST"
   exit 1
 fi
 
