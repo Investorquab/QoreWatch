@@ -67,7 +67,7 @@ export async function buildTx(raw: RawTx): Promise<TxRecord> {
     // Message-derived facts that an event already covers are skipped.
     if (!events.some((e) => e.kind === ev.kind)) events.push(ev);
   }
-  const signer = findSigner(r.events ?? [], body.messages, body.feePayer);
+  const signer = findSigner(r.events ?? [], body.messages, body.feePayer, body.feeGranter);
   const evmTx = events.find((e) => e.kind === "evm_tx");
   const failed = r.code !== 0 || !!(evmTx && evmTx.kind === "evm_tx" && evmTx.failed);
   let failReason: string | undefined;
@@ -112,12 +112,14 @@ export async function buildTx(raw: RawTx): Promise<TxRecord> {
   };
 }
 
-/** The signer: the fee payer, the account in the ante handler's acc_seq, or the EVM sender. */
-function findSigner(events: AbciEvent[], messages: DecodedMsg[], feePayer?: string): string | undefined {
+/**
+ * The signer: the account in the ante handler's acc_seq (the key that signed), or the EVM sender,
+ * and only then the fee payer. The `tx` event's `fee_payer` names the account the fee was deducted
+ * from, which is the fee GRANTER when a fee allowance is used: never take it as the signer then.
+ */
+function findSigner(events: AbciEvent[], messages: DecodedMsg[], feePayer?: string, feeGranter?: string): string | undefined {
   for (const e of events) {
     if (e.type !== "tx") continue;
-    const payer = e.attributes.find((a) => a.key === "fee_payer")?.value;
-    if (payer && isQorAddress(payer)) return payer;
     const seq = e.attributes.find((a) => a.key === "acc_seq")?.value;
     if (seq) {
       const addr = seq.split("/")[0]!;
@@ -128,6 +130,13 @@ function findSigner(events: AbciEvent[], messages: DecodedMsg[], feePayer?: stri
     if (e.type === "message" && e.attributes.some((a) => a.key === "module" && a.value === "evm")) {
       const s = e.attributes.find((a) => a.key === "sender")?.value;
       if (s && isEvmAddress(s)) return evmToQor(s);
+    }
+  }
+  if (!feeGranter) {
+    for (const e of events) {
+      if (e.type !== "tx") continue;
+      const payer = e.attributes.find((a) => a.key === "fee_payer")?.value;
+      if (payer && isQorAddress(payer)) return payer;
     }
   }
   if (feePayer && isQorAddress(feePayer)) return feePayer;
