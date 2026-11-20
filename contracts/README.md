@@ -1,8 +1,17 @@
-# QoreChain Foundry starter
+# QoreWatch contracts: QoreWatchAttest
 
-A [Foundry](https://getfoundry.sh) project for the QoreChain EVM: a `Counter`
-contract, its tests, a deploy script, and a small helper that opens the EVM
-authorisation window your deployer needs.
+`QoreWatchAttest` lets an account record its QoreWatch post-quantum check on QoreChain, from its own account: the score, a report hash (`reportHash`: the SHA3-256 of the canonical report) and the one-time code the bot issued. The bot then confirms in Telegram that what landed on chain matches the report it gave. It holds no funds and stores data only for `msg.sender`.
+
+| | |
+| --- | --- |
+| Contract | `src/QoreWatchAttest.sol`: `attest(uint16 score, bytes32 reportHash, bytes8 code)`, event `Attested`, `attestationOf(account)` |
+| Tests | `test/QoreWatchAttest.t.sol` (Foundry, 7 tests): `forge test` |
+| Deployed (testnet) | `0x52f29cb4f18ec44acbb997b94c0776e4e35ed273`, block 10389715, deploy tx `0x14a8b49efa151586fd80ee234ceb3e981673c97679a3b6e3b7c97dd2b6967400`; see `deployments/qorechain-diana.json` |
+| Deploy | `script/deploy.ts` (`pnpm deploy:testnet`), after opening an EVM window with `pnpm window open` |
+
+## Scaffolded with create-qorechain-dapp
+
+This workspace was created from the **Foundry template of [`create-qorechain-dapp`](https://www.npmjs.com/package/create-qorechain-dapp)** (commit `d71ca3b`, "Scaffold contracts from create-qorechain-dapp's foundry template"). From the template, QoreWatch keeps `foundry.toml` (the `qorechain_testnet` RPC), `tsconfig.json`, `.env.example`, and the EVM window helper `scripts/window.ts` (`pnpm window status | register | open`), which was used to register the deployer's ML-DSA-87 key and open the hybrid-signed EVM window for the testnet deploy (window tx `FE119A8198DF0203A457FAA87E42570C982A9283070F07A96759603C8B6CC710`). The template's example `Counter` contract, script and test were replaced by `QoreWatchAttest`, `script/deploy.ts` and its tests. The template's guide to Foundry on QoreChain follows, unchanged except for the file list.
 
 | Network | EVM chain id | RPC (named in `foundry.toml`) |
 | --- | --- | --- |
@@ -89,11 +98,10 @@ What to know about the window:
 
 ```sh
 pnpm window open
-forge script script/Counter.s.sol --rpc-url qorechain_testnet --broadcast
-# or: pnpm deploy:testnet
+pnpm deploy:testnet
 ```
 
-The script reads `PRIVATE_KEY` and `COUNTER_INITIAL` from `.env`.
+`script/deploy.ts` builds with Foundry, deploys `QoreWatchAttest` from the account in `.env` (never commit `.env`) and writes `deployments/qorechain-diana.json`.
 
 Fees: on both networks today `eth_gasPrice` answers 112.5 gwei (a 100 gwei
 base fee plus a 12.5 gwei priority fee). Foundry's defaults pick this up.
@@ -103,9 +111,10 @@ Contract verification: Sourcify does not list chain ids 9800 and 9801 yet.
 ## Project layout
 
 ```
-src/Counter.sol           the contract
-test/Counter.t.sol        Foundry tests
-script/Counter.s.sol      the deploy script
-scripts/window.ts         the EVM window helper (pnpm window)
+src/QoreWatchAttest.sol           the contract
+test/QoreWatchAttest.t.sol        Foundry tests
+script/deploy.ts                  the deploy script (pnpm deploy:testnet)
+deployments/qorechain-diana.json  where it is deployed
+scripts/window.ts                 the EVM window helper from the template (pnpm window)
 foundry.toml              compiler settings and the named RPC endpoints
 ```
