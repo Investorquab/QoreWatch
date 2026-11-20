@@ -21,10 +21,10 @@ It is not a third-party audit. Known gaps are under **Limitations**.
 | Wallet linking | 4 attacks | all refused | Classical-only, failed, replayed and copied codes; **F-1** found and fixed here |
 | Telegram side | tests | pass | Group admin rules, `/forget`, escaping of everything a sender controls |
 | Web pages and API | tests + live browser | pass | CSP and headers, rate limit, escaping, zero console errors under the CSP |
-| Deployment | 24 server checks | 24 pass | Fresh Ubuntu 24.04: install, alert, rollback, reboot, restore, upgrade; **F-2** found here |
+| Deployment | 25 server checks | 25 pass | Fresh and shared Ubuntu 24.04 servers: install, alert, rollback, reboot, restore, upgrade, neighbours untouched; **F-2** and **F-7** found here |
 | Secrets in the repository | 209 tracked files | none | Only the fake token of the test Bot API stand-in |
 
-Six findings, all fixed. None let anyone move funds, read anything private or silence a critical alert.
+Seven findings, all fixed. None let anyone move funds, read anything private or silence a critical alert.
 
 ## Threat model
 
@@ -107,17 +107,18 @@ QoreX cannot decode the attest call ("Unknown contract call 0xf1dad6b6… QoreX 
 
 ## 6. Deployment
 
-On a fresh Ubuntu 24.04 server (systemd, SSH), following [deploy/README.md](deploy/README.md) exactly:
+On a fresh Ubuntu 24.04 server (systemd, SSH), and again on a copy of a shared server (Caddy already serving three sites from one Caddyfile, a Node 18 app holding port 8787, a global pnpm 8), following [deploy/README.md](deploy/README.md) exactly:
 
 | Check | Result |
 | --- | --- |
 | `ship.sh` over SSH | only committed files travel (`git archive`); the `.env` lands mode 600 |
 | Setup and first release | Node 22 and Caddy installed; healthy and in sync with the chain |
-| `verify.sh` | 24 of 24: unprivileged user, root-only 600 secrets, no `.env` or `private/` in the release, port 8787 on 127.0.0.1 only, every page over HTTPS, security headers, HTTP to HTTPS redirect, database, backup |
+| `verify.sh` | 25 of 25: node version, unprivileged user, root-only 600 secrets, no `.env` or `private/` in the release, port 8787 on 127.0.0.1 only, every page over HTTPS, security headers, HTTP to HTTPS redirect, database, backup |
 | A real alert through the deployed bot | 0.01 QOR with the note "VPS deploy test" reported within seconds |
 | Broken release | backed up, failed to start, rolled back automatically |
 | Reboot | everything came back by itself |
 | Restore and upgrade | restore from backup worked; the schema migration upgraded the live database in place |
+| Shared server | setup refused port 8787 (taken) and a domain already served, changing nothing; with `--port 8790` the only Caddyfile change was one appended import line; the other sites, the Node 18 app, the system node and pnpm were unchanged; QoreWatch ran on its own Node 22 using about 60 MB |
 
 The systemd unit gives the bot no capabilities, a read-only system, a private `/tmp` and devices, and write access only to `/var/lib/qorewatch`. systemd reads the token file for it.
 
@@ -131,6 +132,7 @@ The systemd unit gives the bot no capabilities, a read-only system, a private `/
 | **F-4** | Low | **Slight bias in code characters.** `byte % 31` made some characters a little more likely. | Rejection sampling, with a distribution test (`3455d9d`). |
 | **F-5** | Low (operations) | **A busy port crashed the bot with an unhandled error** after logging "listening". | The listening line waits for the port; a busy port exits with a clear message (`73cead9`). |
 | **F-6** | Low (accuracy) | **False "classical-only signature" warning on key registration.** A key registration is classical-only by necessity. | Not flagged when the same transaction registers a post-quantum key (`8138100`); covered by a test and live step 27. |
+| **F-7** | High (shared servers) | **Setup could disturb other apps on a shared server.** Any existing Caddyfile mentioning `/usr/share/caddy` was taken for the package's placeholder and replaced, which would have dropped every other site. Setup also upgraded the system Node and ran `corepack enable`, which could change the tooling of other apps. The bot's port was fixed at 8787. Raised by the deploy session before anything ran on the real server. | Only the untouched placeholder is ever replaced; otherwise a backup and one appended import line, checked by `caddy adapt` and applied with a graceful reload, and restored if refused. A domain already served is refused. QoreWatch uses its own checksum-verified Node 22 when the system one is older, and no global tool changes. The port is a choice (`--port`), checked for conflicts. The service has memory limits (`c08df1a`). Re-tested on a copy of the shared server: three existing sites, a Node 18 app on 8787 and pnpm 8 unchanged; 25 of 25 checks. |
 
 Earlier, during the build, live testing also corrected the window-fix steps to match QoreX's real screens (`a310e6f`) and flagged dust-liquidity pools as thin instead of showing absurd prices (`7d013c0`).
 

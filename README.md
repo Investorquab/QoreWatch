@@ -14,7 +14,7 @@ Built for the QoreChain *Build Before Q-Day* Developer Fest, Quantum Pass track.
 | Reads | every block of `qorechain-diana` (about one every 1.4 s): native transactions, their events and EVM token logs |
 | Linking | one 1 uqor self-send signed in QoreX with ML-DSA-87 (hybrid); QoreWatch never sees a key |
 | Contract | `QoreWatchAttest` at [`0x52f29cb4f18ec44acbb997b94c0776e4e35ed273`](https://explore.qore.network/tx/0x14a8b49efa151586fd80ee234ceb3e981673c97679a3b6e3b7c97dd2b6967400) (testnet, block 10389715) |
-| Tests | 148 automated (54 core, 81 bot, 6 web, 7 Foundry); 30 of 30 live testnet steps; 6 of 6 pages with the real QoreX extension; 24 of 24 server checks on a fresh Ubuntu 24.04 deploy ([audit.md](audit.md)) |
+| Tests | 148 automated (54 core, 81 bot, 6 web, 7 Foundry); 30 of 30 live testnet steps; 6 of 6 pages with the real QoreX extension; 25 of 25 server checks on fresh and shared Ubuntu 24.04 servers ([audit.md](audit.md)) |
 | Stack | Node 22, TypeScript, grammY, Hono, SQLite (`node:sqlite`), viem, Vite, Foundry |
 
 ---
